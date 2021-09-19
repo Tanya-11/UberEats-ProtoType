@@ -1,5 +1,8 @@
-import './App.css';
 import Axios from "axios";
+import { Routes } from './Routes';
+import  SignUpPage from './views/login/SignUpPage';
+import './App.scss';
+
 
 function App() {
   const name = 'ellen';
@@ -13,23 +16,32 @@ function App() {
 
 
   const addCustomerData = () => {
-    Axios.post("http://localhost:3001/create", {
-      name: name,
-      dob: dob,
-      email: email,
-      phoneNo: phoneNo,
-      city: city,
-      state: state,
-      country: country,
-      imageUrl: imageUrl
-    }).then(()=>{
-      console.log("Success");
+    // Axios.post("http://localhost:3001/signup", {
+    //   name: name,
+    //   dob: dob,
+    //   email: email,
+    //   phoneNo: phoneNo,
+    //   city: city,
+    //   state: state,
+    //   country: country,
+    //   imageUrl: imageUrl
+    // }).then(()=>{
+    //   console.log("Success");
+    // })
+    Axios.get('http://localhost:3001/login')
+    .then((res)=>{
+      console.log("success",res);
     })
   }
   return (
-    <div onClick  ={addCustomerData}>
-      <h1>Hi</h1>
+    // <div onClick  ={addCustomerData}>
+    //   <h1>Hi</h1>
+    // </div>
+    <div className="parent-container">
+      {/* <SignUpPage></SignUpPage> */}
+       <Routes/>
     </div>
+   
   );
 }
 
