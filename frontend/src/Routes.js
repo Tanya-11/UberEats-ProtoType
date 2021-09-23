@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { LoginPage } from './views/login/LogInPage';
-import SignUpPage  from './views/login/SignUpPage';
+import { LoginPage } from './views/auth/LogInPage';
+import SignUpPage  from './views/auth/SignUpPage';
+import Dashboard from './views/dashboard/Dashboard'
 import { PrivateRoute } from './auth/PrivateRoute';
 
 export const Routes = () => {
@@ -12,7 +13,10 @@ export const Routes = () => {
                 </Route>
                 <Route path="/signup" exact >
                 <SignUpPage></SignUpPage>
-                </Route>              
+                </Route>         
+                {/* <Route path='/dashboard' exact>
+                    <Dashboard></Dashboard>
+                    </Route>      */}
             </Switch>
         </Router>
     );

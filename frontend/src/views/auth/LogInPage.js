@@ -1,28 +1,38 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useHistory } from 'react-router-dom';
+import { useDispatch} from 'react-redux';
+import {userLogInProgress, 
+  userLogInFail, 
+  userLogInSuccess,
+  userSignedUpInProgress } from '../../redux/actions/actions';
 import Axios from "axios";
-
-import './LogInPage.scss';
+import './auth.scss';
 
 export const LoginPage = () =>{
 
-     const [errorMsg, setErrorMsg] = useState('');
+    const [errorMsg, setErrorMsg] = useState('');
     const [emailValue, setEmailValue] = useState('');
     const [passwordValue, setPasswordValue] = useState('');
     const history =  useHistory();
+    const dispatch = useDispatch();
+  
+    useEffect(()=>{
+      dispatch(userLogInProgress('In progress'));
+    },[])
     
     const onNextClicked = () =>{
-        Axios.get('http://localhost:3001/login')
+        Axios.post('http://localhost:3001/login',{
+          email:emailValue,
+          password:passwordValue
+        })
         .then((res)=>{
           console.log("success",res);
-          const v =res.data.filter(el=>{
-              if(el.email===emailValue && el.password === passwordValue){
-                  console.log('go to landing page');
-              }
-              else{
-                  setErrorMsg('UserName or Password is not valid!')
-              }
-          })
+            dispatch(userLogInSuccess('Success'));
+            history.push('/dashboard');
+        })
+        .catch(err=>{
+          dispatch(userLogInFail('fail'));
+          throw err;
         })
       }
     return (
@@ -30,7 +40,6 @@ export const LoginPage = () =>{
         <div className="login-wrapper">
         <div className="logo"/>
             <h1>Welcome Back</h1>
-           
             {errorMsg && <div className="fail">{errorMsg}</div>}
             <div className="login-form">
             <input 
@@ -46,7 +55,10 @@ export const LoginPage = () =>{
             <button 
             disabled={!emailValue || !passwordValue}
             onClick={onNextClicked}>Next</button>
-            <button onClick={()=>{history.push('/signup')}}>New to Uber? Create Account</button>
+            <button onClick={()=>{
+                history.push('/signup');
+                dispatch(userSignedUpInProgress('SignUp In Progress'))
+                }}>New to Uber? Create Account</button>
             </div>
             </div>
         </div>

@@ -1,0 +1,26 @@
+.rest-card-container {
+    width: 157.5px;
+    height: 180px;
+    // border: 1px black solid;
+    display: inline-block;
+    margin: 1.5%;
+    .image-container {
+        object-fit: contain;
+        width: -webkit-fill-available;
+        height: 128px;
+        content: url('./../../assets/restaurant.png');
+    }
+    .rest-name-container {
+        justify-content: space-between;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin: 9% 0 0;
+        &--title {
+            text-overflow: ellipsis;
+            margin:0px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+    }
+}

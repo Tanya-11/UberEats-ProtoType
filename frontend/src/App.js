@@ -1,7 +1,8 @@
 import Axios from "axios";
 import { Routes } from './Routes';
-import  SignUpPage from './views/login/SignUpPage';
+import  SignUpPage from './views/auth/SignUpPage';
 import './App.scss';
+import Dashboard from './views/dashboard/Dashboard';
 
 
 function App() {
@@ -39,7 +40,13 @@ function App() {
     // </div>
     <div className="parent-container">
       {/* <SignUpPage></SignUpPage> */}
-       <Routes/>
+       {/* <Routes/> */}
+       <Dashboard></Dashboard>
+       {/* <Dashboard></Dashboard>
+       <Dashboard></Dashboard>
+       <Dashboard></Dashboard>
+       <Dashboard></Dashboard>
+       <Dashboard></Dashboard> */}
     </div>
    
   );

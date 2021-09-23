@@ -8,4 +8,4 @@ const pool = mysql2.createPool({
     password:process.env.password
 });
 
-module.exports = pool.promise();
+module.exports = pool;
