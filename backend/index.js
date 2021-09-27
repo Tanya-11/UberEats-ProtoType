@@ -6,17 +6,17 @@ const PORT = 3001;
 const router = express.Router();
 const db = require('./utils/database');
 const app = express();
-const cors= require('cors');
-app.use(express.urlencoded({extended:true}));
+const cors = require('cors');
+app.use(express.urlencoded({ extended: true }));
 // app.use(bodyParser.json());
 app.use(express.json());
 
 app.use(
   cors(
-  //   {
-  //   origin: 'http://localhost:3000',
-  //   credentials: true,
-  // }
+    //   {
+    //   origin: 'http://localhost:3000',
+    //   credentials: true,
+    // }
   )
 );
 
@@ -24,24 +24,30 @@ app.use(
 //   if(err) throw err;
 //   console.log('Connection to DB established');
 // })
-
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+/**
+ * All Get Calls
+ */
 
-app.post('/login',  (req,res)=>{
-  console.log("email-",typeof(req.body.password));
+
+/**
+ * All POST Calls
+ */
+app.post('/login', (req, res) => {
+  console.log("email-", typeof (req.body.password));
   // let sql = `SELECT * FROM customer WHERE UPPER(email) = '${req.body.email}'`;
-    db.query('SELECT * from customer WHERE email=?',[req.body.email],
-     async(err, result) => {
-      if(err){
+  db.query('SELECT * from customer WHERE email=?', [req.body.email],
+    async (err, result) => {
+      if (err) {
         res.status(400).send(err);
         return;
       }
-      if(result) {
-        console.log("result-",typeof(result[0].password));
+      if (result) {
+        console.log("result-", typeof (result[0].password));
         const validPassword = await bcrypt.compare(req.body.password, result[0].password);
-        console.log("com",validPassword);
-        if(validPassword) res.status(200).json("Valid User, Successfully loggedIn");
+        console.log("com", validPassword);
+        if (validPassword) res.status(200).json("Valid User, Successfully loggedIn");
         else res.status(400).send("Wrong Password");
       }
       else res.json({});
@@ -49,56 +55,125 @@ app.post('/login',  (req,res)=>{
 });
 
 //Route to handle Post Request Call
-app.post('/signup', async(req, res)=> {
+app.post('/signup', async (req, res) => {
   console.log(req.body);
   const encryptedPassword = await bcrypt.hash(req.body.password, saltRounds);
-  console.log("encryptedPassword",encryptedPassword);
-    db.query('INSERT INTO customer(name,email,password) VALUES (?,?,?)',
-     [req.body.name, req.body.email,encryptedPassword],
-     (err,result)=>{
-       if(err){
-         res.status(400).json(err);
-         console.log(err);
-       }
-       else{
+  console.log("encryptedPassword", encryptedPassword);
+  db.query('INSERT INTO customer(name,email,password) VALUES (?,?,?)',
+    [req.body.name, req.body.email, encryptedPassword],
+    (err, result) => {
+      if (err) {
+        res.status(400).json(err);
+        console.log(err);
+      }
+      else {
         res.status(200).json(result);
-       console.log(result);
-       }
+        console.log(result);
+      }
     })
 });
 
-app.post('/dashboard', (req,res)=>{
-  console.log(req.body);
- // const pick= 'del';
-  let sql = `SELECT d.dishId,
- d.dishName, d.restRef, r.restName FROM dishes as d JOIN restaurant as r
-  ON r.restId = d.restRef 
-  AND r.city LIKE "%${req.body.city}%" AND r.deliveryMode LIKE "%${req.body.mode}%" 
-  AND d.dishName LIKE "%${req.body.dish}%" 
-  AND r.restName LIKE "%${req.body.restaurant}%"`;
- //')'
-  db.query(sql,(err,result)=>{
-    if(err){
+app.post('/getDataBySearchTabTextForDish', (req, res) => {
+  //  if(req?.body?.searchTabText!=='') {
+  let sql = `SELECT DISTINCT  d.dishName, d.restRef, r.restName 
+  FROM dishes as d JOIN restaurant as r
+  ON r.restId = d.restRef AND r.city LIKE "%${req.body.city}%" 
+  AND r.deliveryMode LIKE "%${req.body.mode}%" 
+  AND d.dishName LIKE "%${req.body.searchTabText}%" 
+  LIMIT 4`;
+  db.query(sql, (err, resp) => {
+    if (err) {
       res.status(400).json(err);
-         console.log(err);
+      console.log(err);
     }
-    else{
-      res.status(200).json(result);
-       console.log(result);
+    else {
+      res.status(200).json(resp);
+      console.log(resp);
+    }
+  });
+  //  }
+
+});
+
+app.post('/getDataBySearchTabTextForRest', (req, res) => {
+  //  if(req?.body?.searchTabText!=='') {
+  let sql = `SELECT DISTINCT  d.restRef, r.restName 
+  FROM dishes as d JOIN restaurant as r
+  ON r.restId = d.restRef AND r.city LIKE "%${req.body.city}%" 
+  AND r.deliveryMode LIKE "%${req.body.mode}%" 
+  AND r.restName LIKE "%${req.body.searchTabText}%"
+  LIMIT 4`;
+  db.query(sql, (err, resp) => {
+    if (err) {
+      res.status(400).json(err);
+      console.log(err);
+    }
+    else {
+      res.status(200).json(resp);
+      console.log(resp);
+    }
+  });
+  //  }
+
+})
+
+app.post('/dashboard', (req, res) => {
+  console.log(req.body);
+  let sql = `SELECT * FROM restaurant
+    WHERE city LIKE "%${req.body.city}%" 
+    AND deliveryMode LIKE "%${req.body.mode}%" LIMIT 2`;
+  db.query(sql, (err, resp) => {
+    if (err) {
+      res.status(400).json(err);
+      console.log(err);
+    }
+    else {
+      res.status(200).json(resp);
+      // result.push(resp);
+      //.json(result);
+      //console.log("res2",result);
     }
   })
 });
 
-app.post('/favorites',(req,res)=>{
-  let sql=`INSERT fav_restaurant (custID, restID) values(?,?)`;
-  db.query(sql,['liam@gmail.com','ch-king@gmail.com'],(err, result)=>{
-    if(err){
+app.post('/favorites-add', (req, res) => {
+  let sql = `INSERT fav_restaurant (custID, restID) values(?,?)`;
+  db.query(sql, ['liam@gmail.com', 'ch-king@gmail.com'], (err, result) => {
+    if (err) {
       res.status(400).json(err);
-         console.log(`Invalid User or Restaurant Name${err}`);
+      console.log(`Invalid User or Restaurant Name${err}`);
     }
-    else{
+    else {
       res.status(200).json(result);
-       console.log(result);
+      console.log(result);
+    }
+  })
+});
+app.post('/favorites-delete', (req, res) => {
+  let sql = `DELETE FROM fav_restaurant WHERE custId = ? AND restId = ?`;
+  db.query(sql, ['liam@gmail.com', 'ch-king@gmail.com'], (err, result) => {
+    console.log(res);
+    if (err) {
+      res.status(400).json(err);
+      console.log(`Invalid User or Restaurant Name${err}`);
+    }
+    else {
+      res.status(200).json(result);
+      console.log(result);
+    }
+  })
+});
+
+app.post('/get-favorites', (req, res) => {
+  let sql = `SELECT * FROM fav_restaurant WHERE custId = ?`;
+  db.query(sql, [req.body.user, req.body.restaurant], (err, result) => {
+    if (err) {
+      res.status(400).json(err);
+      console.log(`Invalid User Name:${err}`);
+    }
+    else {
+      res.status(200).json(result);
+      console.log(result);
     }
   })
 });

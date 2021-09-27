@@ -40,8 +40,8 @@ function App() {
     // </div>
     <div className="parent-container">
       {/* <SignUpPage></SignUpPage> */}
-       {/* <Routes/> */}
-       <Dashboard></Dashboard>
+       <Routes/>
+       {/* <Dashboard></Dashboard> */}
        {/* <Dashboard></Dashboard>
        <Dashboard></Dashboard>
        <Dashboard></Dashboard>
