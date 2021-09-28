@@ -95,14 +95,15 @@ app.post('/getDataBySearchTabTextForDish', (req, res) => {
 
 });
 
-app.post('/getDataBySearchTabTextForRest', (req, res) => {
+app.post('/getDataForRestDish', (req, res) => {
+  console.log(req.body);
   //  if(req?.body?.searchTabText!=='') {
-  let sql = `SELECT DISTINCT  d.restRef, r.restName 
+  let sql = `SELECT   d.dishId, d.dishName, d.ingredients, d.price, r.restName, r.restId, r.addressLine,
+  r.description, r.openHrs
   FROM dishes as d JOIN restaurant as r
   ON r.restId = d.restRef AND r.city LIKE "%${req.body.city}%" 
   AND r.deliveryMode LIKE "%${req.body.mode}%" 
-  AND r.restName LIKE "%${req.body.searchTabText}%"
-  LIMIT 4`;
+  AND r.restId LIKE "%${req.body.searchTabText}%"`;
   db.query(sql, (err, resp) => {
     if (err) {
       res.status(400).json(err);
@@ -110,7 +111,29 @@ app.post('/getDataBySearchTabTextForRest', (req, res) => {
     }
     else {
       res.status(200).json(resp);
-      console.log(resp);
+      console.log("!!!!", resp);
+    }
+  });
+  //  }
+
+})
+
+app.post('/getDataForRest', (req, res) => {
+  console.log(req.body);
+  //  if(req?.body?.searchTabText!=='') {
+  let sql = `SELECT DISTINCT restName, restId
+  FROM  restaurant WHERE
+ city LIKE "%${req.body.city}%" 
+  AND deliveryMode LIKE "%${req.body.mode}%" 
+ `;
+  db.query(sql, (err, resp) => {
+    if (err) {
+      res.status(400).json(err);
+      console.log(err);
+    }
+    else {
+      res.status(200).json(resp);
+      console.log("!!!!", resp);
     }
   });
   //  }
@@ -137,8 +160,11 @@ app.post('/dashboard', (req, res) => {
 });
 
 app.post('/favorites-add', (req, res) => {
+  console.log("fav", req.body);
+  const [user, restaurant] = req.body;
+  console.log(user, restaurant);
   let sql = `INSERT fav_restaurant (custID, restID) values(?,?)`;
-  db.query(sql, ['liam@gmail.com', 'ch-king@gmail.com'], (err, result) => {
+  db.query(sql, [user, restaurant], (err, result) => {
     if (err) {
       res.status(400).json(err);
       console.log(`Invalid User or Restaurant Name${err}`);
@@ -150,8 +176,9 @@ app.post('/favorites-add', (req, res) => {
   })
 });
 app.post('/favorites-delete', (req, res) => {
+  const [user, restaurant] = req.body;
   let sql = `DELETE FROM fav_restaurant WHERE custId = ? AND restId = ?`;
-  db.query(sql, ['liam@gmail.com', 'ch-king@gmail.com'], (err, result) => {
+  db.query(sql, [user, restaurant], (err, result) => {
     console.log(res);
     if (err) {
       res.status(400).json(err);

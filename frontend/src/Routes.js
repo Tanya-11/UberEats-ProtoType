@@ -1,10 +1,11 @@
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { LoginPage } from './views/auth/LogInPage';
-import SignUpPage from './views/auth/SignUpPage';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { LoginPage } from './views/auth/LogInPage'
+import SignUpPage from './views/auth/SignUpPage'
 import Dashboard from './views/dashboard/Dashboard'
-import { PrivateRoute } from './auth/PrivateRoute';
-import RestCardDetail from './views/common/RestCardDetail/RestCardDetail';
-
+import { PrivateRoute } from './auth/PrivateRoute'
+import RestCardDetail from './views/common/RestCardDetail/RestCardDetail'
+import { DashRoutes } from './views/dashboard/DashRoutes';
+import Header from './views/dashboard/Header'
 export const Routes = () => {
     return (
         <Router>
@@ -12,18 +13,16 @@ export const Routes = () => {
                 <Route path="/login" exact>
                     <LoginPage></LoginPage>
                 </Route>
-                <Route path="/signup" exact >
+                <Route path="/signup" exact>
                     <SignUpPage></SignUpPage>
                 </Route>
-                <Route path='/dashboard' exact>
-                    <Dashboard></Dashboard>
-                </Route>
-                <Route path='/dashboard/restaurant-details'>
-                    <RestCardDetail />
+                <Route path="/dashboard">
+                    <Header />
+                    <DashRoutes></DashRoutes>
                 </Route>
             </Switch>
         </Router>
-    );
+    )
 }
 
 // auth={false}

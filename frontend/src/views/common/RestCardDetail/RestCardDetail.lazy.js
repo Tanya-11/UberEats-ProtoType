@@ -1,11 +1,11 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense } from 'react'
 
-const LazyRestCardDetail = lazy(() => import('./RestCardDetail'));
+const LazyRestCardDetail = lazy(() => import('./RestCardDetail'))
 
-const RestCardDetail = props => (
-  <Suspense fallback={null}>
-    <LazyRestCardDetail {...props} />
-  </Suspense>
-);
+const RestCardDetail = (props) => (
+    <Suspense fallback={null}>
+        <LazyRestCardDetail {...props} />
+    </Suspense>
+)
 
-export default RestCardDetail;
+export default RestCardDetail

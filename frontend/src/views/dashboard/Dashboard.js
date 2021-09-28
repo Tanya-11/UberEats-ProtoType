@@ -3,7 +3,6 @@
 // import RestCard from './../common/RestCard';
 // import { useState, useEffect } from "react";
 
-
 // const Dashboard=()=>{
 //     // state = {
 //     //     restData: []
@@ -16,9 +15,6 @@
 //     // componentDidMount(){
 //     //     this.getrestData();
 //     // }
-
-
-
 
 //         let resData=[];
 //         useEffect(()=>{
@@ -51,7 +47,6 @@
 
 // export default Dashboard;
 
-
 //!!!!!!!!!!!!!!!!!!!!!!!!!
 /**
  * two APIS will be called
@@ -71,83 +66,81 @@
 //  *
 //  */
 
-
-import { useState, useEffect } from 'react';
-import Axios from 'axios';
-import RestCard from '../common/RestCard';
-import Header from './Header';
+import { useState, useEffect } from 'react'
+import Axios from 'axios'
+import RestCard from '../common/RestCard'
+import Header from './Header'
 
 const Dashboard = () => {
-  const [restData, setrestData] = useState([]);
-  const [favRest, setfavRest] = useState(false);
+    const [restData, setrestData] = useState([])
+    const [favRest, setfavRest] = useState(false)
 
+    // + adding the use
+    useEffect(() => {
+        // we will use async/await to fetch this data
+        getrestData() //uncomment later, commented to check fav data
+        //    getfavData()
 
-  // + adding the use
-  useEffect(() => {
-    // we will use async/await to fetch this data
-    getrestData(); //uncomment later, commented to check fav data
-    getfavData();
+        //setfavRest();
+    }, []) // <- you may need to put the setBooks function in this array
+    const getrestData = async () => {
+        let response = []
+        try {
+            response = await Axios.post('http://localhost:3001/getDataForRest', {
+                city: 'San Jose',
+                mode: '',
+                searchTabText: 'dom',
+            }).then(
+                (result) => {
+                    console.log('Api res-', result);
 
-    //setfavRest();
-  }, []); // <- you may need to put the setBooks function in this array
-  const getrestData = async () => {
-    let response = [];
-    try {
-      response = await Axios.post("http://localhost:3001/getDataBySearchTabTextForRest",
-        {
-          city: 'San Jose',
-          mode: '',
-        searchTabText: 'king',
-        })
-        .then((result) => {
-          console.log("Api res-", result);
-          return result.data;
+                    return result.data
+                }
+                // ({ data }) => data
+            )
+        } catch (err) {
+            throw err
         }
-          // ({ data }) => data
-        );
+        // store the data into our books variable
+        response.forEach(element => {
+            element['fav'] = true;
+            getfavData(element);
+        });
+        setrestData(response);
     }
-    catch (err) {
-      throw err;
+    const getfavData = async (rest) => {
+        let response = []
+        try {
+            response = await Axios.post('http://localhost:3001/get-favorites', {
+                user: 'liam@gmail.com',
+                restaurant: rest?.restId,
+            }).then((res) => {
+                console.log('getfavData', res)
+                if (res.status === 200 && res.data.length > 0) {
+                    //  setfavRest(true)
+                    rest['fav'] = true;
+                    console.log('Hey')
+                } else {
+                    console.log('bye')
+                    rest['fav'] = true;
+                    // setfavRest(false)
+                }
+            })
+        } catch (err) {
+            throw err
+        }
     }
-    // store the data into our books variable
-    setrestData(response);
+    return (
+        <div>
+            {
+                restData.map((result, i) => (
+                    <RestCard key={i} data={result}></RestCard>
+                ))
+            }
 
-  }
-  const getfavData = async () => {
-    let response = [];
-    try {
-      response = await Axios.post('http://localhost:3001/get-favorites', {
-        user: 'liam@gmail.com',
-        restaurant: 'ch-king@gmail.com'
-      })
-        .then((res) => {
-          console.log("getfavData", res);
-          if (res.status === 200 && res.data.length > 0) {
-            setfavRest(true);
-            console.log('Hey')
-          }
-          else {
-            console.log('bye')
-            setfavRest(false);
-          }
-        })
-    }
-    catch (err) {
-      throw err;
-    }
-  }
-  return (
-    <>
-      <Header></Header>
-      {restData.map((item, index) => {
-        return (
-          <>
-            <RestCard key={index} data={item} fav={favRest}></RestCard>
-          </>
-        )
-      })}
-    </>
-  )
+
+        </div>
+    )
 }
 
-export default Dashboard;
+export default Dashboard

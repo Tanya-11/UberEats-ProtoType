@@ -1,23 +1,51 @@
-.header-container{
-    display: flex;
-    align-items: center;
-    justify-content: space-around;  
-    height: 96px;
+.header-container {
+  display: flex;
+  align-items: center;
+  height: 96px;
 
-    .uber-logo{
-        content: url('../../assets/Uber_Eats.svg');
-        object-fit: scale-down;
+  .uber-logo {
+    content: url("../../assets/Uber_Eats.svg");
+    object-fit: scale-down;
+  }
+  .toggle-switch {
+    height: 2rem;
+  }
+  .location {
+    height: 2rem;
+    input {
+      height: inherit;
+      background-color: lightgray;
+      border: 0;
     }
-    .toggle-switch{
-
+  }
+  .search {
+    height: 2rem;
+    input {
+      height: inherit;
+      background-color: lightgray;
+      border: 0;
     }
-    .location{
-
+  }
+  .cart {
+    button {
+      width: 4rem;
+      height: 2rem;
+      display: flex;
+      background-color: black;
+      border-radius: 500px;
+      border: 0;
+      .cartIcon {
+        color: white;
+        border-radius: 500px;
+        align-self: center;
+      }
+      input {
+        width: 50%;
+        background-color: transparent;
+        color: white;
+        align-self: center;
+        text-align-last: right;
+      }
     }
-    .search{
-
-    }
-    .cart{
-
-    }
+  }
 }
