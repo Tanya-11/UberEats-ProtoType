@@ -4,7 +4,8 @@ const signUpStatus = {
     text: 'In Progress',
     isSignedUp: false,
 }
-export const signup = (state = [], action) => {
+
+export const signupReducer = (state = [], action) => {
     console.log('reducers' + JSON.stringify(action))
     const { type, payload } = action
     switch (type) {
@@ -30,12 +31,35 @@ export const signup = (state = [], action) => {
     }
 }
 
-// add for login later
-const logInStatus = {
-    text: 'In Progress',
-    isLoggedIn: false,
+export const restaurantSignup = (state = [], action) => {
+    console.log('reducers' + JSON.stringify(action))
+    const { type, payload } = action
+    switch (type) {
+        case ACTIONS.USER_SIGNEDUP_SUCCESS: {
+            const { text } = payload
+            const status = {
+                text: payload.text,
+                isSignedUp: true,
+            }
+            return state.concat(status)
+        }
+        case ACTIONS.USER_SIGNEDUP_INPROGRESS:
+        case ACTIONS.USER_SIGNEDUP_FAIL: {
+            const { text } = payload
+            const status = {
+                text: text,
+                isSignedUp: false,
+            }
+            return state.concat(status)
+        }
+        default:
+            return state
+    }
 }
-export const login = (state = [logInStatus], action) => {
+
+
+// add for login later
+export const userLoginReducer = (state = {}, action) => {
     const { type, payload } = action
     console.log(action)
     switch (type) {
@@ -45,7 +69,7 @@ export const login = (state = [logInStatus], action) => {
                 text: text,
                 isLoggedIn: true,
             }
-            return state.concat(status)
+            return state = status;
         }
         case ACTIONS.USER_LOGGEDIN_INPROGRESS:
         case ACTIONS.USER_LOGGEDIN_FAIL: {
@@ -54,7 +78,32 @@ export const login = (state = [logInStatus], action) => {
                 text: text,
                 isLoggedIn: false,
             }
-            return state.concat(status)
+            return state = status;
+        }
+        default:
+            return state
+    }
+}
+export const restLoginReducer = (state = {}, action) => {
+    const { type, payload } = action
+    console.log(action)
+    switch (type) {
+        case ACTIONS.RESTAURANT_LOGGEDIN_SUCCESS: {
+            const { text } = payload
+            const status = {
+                text: text,
+                isLoggedIn: true,
+            }
+            return state = status;
+        }
+        case ACTIONS.RESTAURANT_LOGGEDIN_INPROGRESS:
+        case ACTIONS.RESTAURANT_LOGGEDIN_FAIL: {
+            const { text } = payload
+            const status = {
+                text: text,
+                isLoggedIn: false,
+            }
+            return state = status;
         }
         default:
             return state

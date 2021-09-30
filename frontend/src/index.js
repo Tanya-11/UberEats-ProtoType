@@ -7,12 +7,15 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App'
 import { Provider } from 'react-redux'
 import { configureStore } from './redux/store'
+//import configureStore from './redux/store'
 
 const store = configureStore()
 const persistor = persistStore(store)
 ReactDOM.render(
     <Provider store={store}>
-        <PersistGate loading={<div>Loading...</div>} persistor={persistor}>
+        <PersistGate loading={<div>Loading...</div>}
+            persistor={persistor}
+            store={store}>
             <BrowserRouter>
                 <App />
             </BrowserRouter>

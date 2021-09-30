@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Redirect } from 'react-router'
 import { connect, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -10,7 +10,7 @@ import {
 import { signup } from '../../redux/reducers/reducers'
 import './auth.scss'
 import Axios from 'axios'
-const SignUpPage = () => {
+const SignUpPage = (props) => {
     const dispatch = useDispatch()
     const history = useHistory()
     // console.log("onSignUp="+JSON.stringify(onSignUp));
@@ -19,23 +19,45 @@ const SignUpPage = () => {
     // if(!props.auth){
     //     return (<Redirect to="/login"></Redirect>);
     // }
-
     const [errorMsg, setErrorMsg] = useState('')
-    const [nameValue, setnameValue] = useState('')
-    const [emailValue, setEmailValue] = useState('')
-    const [passwordValue, setPasswordValue] = useState('')
-    const [confirmPasswordValue, setconfirmPasswordValue] = useState('')
+    const [emailValue, setEmailValue] = useState('');
+    const [nameValue, setNameValue] = useState('');
+    const [cityValue, setcityValue] = useState('');
+    const [passwordValue, setPasswordValue] = useState('');
+    const [emailPlaceholder, setEmailPlaceholder] = useState('TType Email');
+    const [passwordPlaceholder, setPasswordPlaceholder] = useState('Type Password');
+    const [namePlaceholder, setNamePlaceholder] = useState('Type Name');
+    const [cityPlaceholder, setCityPlaceholder] = useState('Type City');
+    const [signUpURL, setSignUpURL] = useState('')
 
+    useEffect(() => {
+        console.log(props.data);
+        if (props.data === 'restaurant') {
+            setEmailPlaceholder('Restaurant Email');
+            setNamePlaceholder('Restaurant Name');
+            setPasswordPlaceholder('Restaurant Password');
+            setCityPlaceholder('Restaurant Location');
+            setSignUpURL('/restaurant-login');
+        }
+        else {
+            setEmailPlaceholder('User Email');
+            setNamePlaceholder('User Name');
+            setPasswordPlaceholder('User Password');
+            setSignUpURL('/user-signup');
+        }
+    }, [])
     const onSignUpClicked = () => {
         Axios.post('http://localhost:3001/signup', {
             name: nameValue,
             email: emailValue,
             password: passwordValue,
+            city: cityValue,
+            persona: props.data
         })
             .then((res) => {
                 console.log(res)
                 dispatch(userSignedUpSuccess('Sign Up Success'))
-                history.push('/login')
+                history.push(signUpURL)
             })
             .catch((err) => {
                 console.log(err)
@@ -53,28 +75,30 @@ const SignUpPage = () => {
                 <div className="login-form">
                     <input
                         value={nameValue}
-                        onChange={(e) => setnameValue(e.target.value)}
+                        onChange={(e) => setNameValue(e.target.value)}
                         type="text"
-                        placeholder="Name"
+                        placeholder={namePlaceholder}
                     />
                     <input
                         value={emailValue}
                         onChange={(e) => setEmailValue(e.target.value)}
                         type="email"
-                        placeholder="Email"
+                        placeholder={emailPlaceholder}
                     />
                     <input
                         value={passwordValue}
                         onChange={(e) => setPasswordValue(e.target.value)}
                         type="password"
-                        placeholder="Password"
+                        placeholder={passwordPlaceholder}
                     />
-                    <input
-                        value={confirmPasswordValue}
-                        onChange={(e) => setconfirmPasswordValue(e.target.value)}
-                        type="password"
-                        placeholder="Confirm Password"
-                    />
+                    {
+                        props.data === 'restaurant' && <input
+                            value={cityValue}
+                            onChange={(e) => setcityValue(e.target.value)}
+                            type="text"
+                            placeholder={cityPlaceholder}
+                        />
+                    }
                     <button
                         // disabled={!emailValue || !passwordValue || !confirmPasswordValue }
                         onClick={onSignUpClicked}

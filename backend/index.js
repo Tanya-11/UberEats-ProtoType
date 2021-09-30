@@ -34,43 +34,84 @@ const saltRounds = 10;
 /**
  * All POST Calls
  */
-app.post('/login', (req, res) => {
-  console.log("email-", typeof (req.body.password));
+app.post('/signin', (req, res) => {
+  console.log("email-", (req.body));
+  let api = '';
+  if (req.body.persona === 'customer') api = 'SELECT * from customer WHERE email=?';
+  else api = 'SELECT * from restaurant WHERE restId=?'
   // let sql = `SELECT * FROM customer WHERE UPPER(email) = '${req.body.email}'`;
-  db.query('SELECT * from customer WHERE email=?', [req.body.email],
+  db.query(api, [req.body.email],
     async (err, result) => {
-      if (err) {
-        res.status(400).send(err);
-        return;
+      console.log('%%%%%%', result);
+      console.log('######', err);
+      try {
+        // if (err) {
+        //   console.log(err, "%%%%%%%%%%%%%");
+        //   res.status(400).json('Wrong Username or password');
+        //   return;
+        // }
+        if (result && result?.length > 0) {
+          console.log("result-", typeof (result[0].password));
+          const validPassword = await bcrypt.compare(req.body.password, result[0].password);
+          console.log("com", validPassword);
+          if (validPassword) res.status(200).json("Valid User, Successfully loggedIn");
+          else res.status(401).json("Wrong Password");
+        }
+        else res.status(400).json('Wrong Username or password');
       }
-      if (result) {
-        console.log("result-", typeof (result[0].password));
-        const validPassword = await bcrypt.compare(req.body.password, result[0].password);
-        console.log("com", validPassword);
-        if (validPassword) res.status(200).json("Valid User, Successfully loggedIn");
-        else res.status(400).send("Wrong Password");
+      catch (error) {
+        console.log(error);
+        throw error;
       }
-      else res.json({});
     })
+
 });
 
 //Route to handle Post Request Call
 app.post('/signup', async (req, res) => {
-  console.log(req.body);
+  let api = '';
+  let response = [];
   const encryptedPassword = await bcrypt.hash(req.body.password, saltRounds);
-  console.log("encryptedPassword", encryptedPassword);
-  db.query('INSERT INTO customer(name,email,password) VALUES (?,?,?)',
-    [req.body.name, req.body.email, encryptedPassword],
+
+  if (req.body.persona === 'customer') {
+    api = 'SELECT * from customer WHERE email=?';
+    // response = [req.body.email]
+  }
+  else {
+    api = 'SELECT * from restaurant WHERE restId=?';
+    // response = [req.body.email]
+  }
+  db.query(api, [req.body.email],
     (err, result) => {
-      if (err) {
-        res.status(400).json(err);
-        console.log(err);
+      if (result && result.lenth > 0) {
+        return res.status(409).json('User Exists');
       }
       else {
-        res.status(200).json(result);
-        console.log(result);
+        if (req.body.persona === 'customer') {
+          api = 'INSERT INTO customer(name,email,password) VALUES (?,?,?)';
+          response = [req.body.name, req.body.email, encryptedPassword]
+        }
+        else {
+          api = 'INSERT INTO restaurant(restName,restId,password) VALUES (?,?,?)';
+          response = [req.body.name, req.body.email, encryptedPassword, req.body.city]
+        }
+
+        console.log(req.body);
+        console.log("encryptedPassword", encryptedPassword);
+        db.query(api, [...response],
+          (err, result) => {
+            if (err) {
+              res.status(400).json(err);
+              console.log(err);
+            }
+            else {
+              res.status(200).json(result);
+              console.log(result);
+            }
+          })
       }
     })
+
 });
 
 app.post('/getDataBySearchTabTextForDish', (req, res) => {
