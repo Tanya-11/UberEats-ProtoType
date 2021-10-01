@@ -1,30 +1,44 @@
 const express = require("express");
+const session = require("express-session");
+const db = require('./utils/database');
+const cors = require('cors');
+const cookieParser = require("cookie-parser");
 
 const PORT = 3001;
 //process.env.PORT || 3001;
 // const bodyParser = require('body-parser');
 const router = express.Router();
-const db = require('./utils/database');
 const app = express();
-const cors = require('cors');
 app.use(express.urlencoded({ extended: true }));
 // app.use(bodyParser.json());
 app.use(express.json());
 
 app.use(
   cors(
-    //   {
-    //   origin: 'http://localhost:3000',
-    //   credentials: true,
-    // }
+    {
+      origin: 'http://3.143.169.133:3000',
+      methods: ["GET", "POST"],
+      credentials: true,
+    }
   )
 );
+app.use(cookieParser());
+//app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({
+  secret: "some-secret",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 200
+  }
+}))
 
 // db.connect((err)=>{
 //   if(err) throw err;
 //   console.log('Connection to DB established');
 // })
 const bcrypt = require('bcrypt');
+const bodyParser = require("body-parser");
 const saltRounds = 10;
 /**
  * All Get Calls
@@ -54,7 +68,11 @@ app.post('/signin', (req, res) => {
           console.log("result-", typeof (result[0].password));
           const validPassword = await bcrypt.compare(req.body.password, result[0].password);
           console.log("com", validPassword);
-          if (validPassword) res.status(200).json("Valid User, Successfully loggedIn");
+          if (validPassword) {
+            req.session.user = result;
+            console.log("rrrr", req.session.user);
+            res.status(200).json("Valid User, Successfully loggedIn");
+          }
           else res.status(401).json("Wrong Password");
         }
         else res.status(400).json('Wrong Username or password');

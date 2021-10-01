@@ -19,7 +19,7 @@
 //         let resData=[];
 //         useEffect(()=>{
 //             () => {
-//                 let data =  Axios.get('http://localhost:3001/dashboard')
+//                 let data =  Axios.get('http://3.143.169.133:3001/dashboard')
 //                     .then(({ data }) => data);
 //                     resData = data;
 
@@ -74,6 +74,7 @@ import Header from './Header'
 const Dashboard = () => {
     const [restData, setrestData] = useState([])
     const [favRest, setfavRest] = useState(false)
+    Axios.defaults.withCredentials = true;
 
     // + adding the use
     useEffect(() => {
@@ -86,7 +87,7 @@ const Dashboard = () => {
     const getrestData = async () => {
         let response = []
         try {
-            response = await Axios.post('http://localhost:3001/getDataForRest', {
+            response = await Axios.post('http://3.143.169.133:3001/getDataForRest', {
                 city: 'San Jose',
                 mode: '',
                 searchTabText: 'dom',
@@ -111,7 +112,7 @@ const Dashboard = () => {
     const getfavData = async (rest) => {
         let response = []
         try {
-            response = await Axios.post('http://localhost:3001/get-favorites', {
+            response = await Axios.post('http://3.143.169.133:3001/get-favorites', {
                 user: 'liam@gmail.com',
                 restaurant: rest?.restId,
             }).then((res) => {

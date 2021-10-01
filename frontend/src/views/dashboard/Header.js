@@ -19,7 +19,7 @@ const Header = () => {
     const navigateToDash = () => {
         history.push('/dashboard');
     }
-    //Axios.post('http://localhost:3001/dashboard')
+    //Axios.post('http://3.143.169.133:3001/dashboard')
 
     return (
         <div className="header-container">

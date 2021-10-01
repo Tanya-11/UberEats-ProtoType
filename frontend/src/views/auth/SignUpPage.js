@@ -29,6 +29,7 @@ const SignUpPage = (props) => {
     const [namePlaceholder, setNamePlaceholder] = useState('Type Name');
     const [cityPlaceholder, setCityPlaceholder] = useState('Type City');
     const [signUpURL, setSignUpURL] = useState('')
+    Axios.defaults.withCredentials = true;
 
     useEffect(() => {
         console.log(props.data);
@@ -47,7 +48,7 @@ const SignUpPage = (props) => {
         }
     }, [])
     const onSignUpClicked = () => {
-        Axios.post('http://localhost:3001/signup', {
+        Axios.post('http://3.143.169.133:3001/signup', {
             name: nameValue,
             email: emailValue,
             password: passwordValue,

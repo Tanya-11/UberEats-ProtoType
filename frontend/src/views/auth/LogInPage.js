@@ -25,6 +25,7 @@ export const LoginPage = (props) => {
     const dispatch = useDispatch()
     const userLoginStatus = useSelector(state => state.userLogin);
     const restLoginStatus = useSelector(state => state.restLogin);
+    Axios.defaults.withCredentials = true;
 
     useEffect(() => {
         if (props.data === 'customer') {
@@ -85,7 +86,7 @@ export const LoginPage = (props) => {
 
     const onNextClicked = () => {
         console.log('clcik');
-        Axios.post('http://localhost:3001/signin', {
+        Axios.post('http://3.143.169.133:3001/signin', {
             email: emailValue,
             password: passwordValue,
             persona: props.data
