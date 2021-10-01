@@ -24,7 +24,7 @@ const RestCardDetail = () => {
 
     const getRestDishDetails = async (restId) => {
         console.log(restId);
-        let api = 'http://3.143.169.133:3001/getDataForRestDish'
+        let api = 'http://18.220.7.192:3001/getDataForRestDish'
         let response = []
         try {
             response = await Axios.post(api, {

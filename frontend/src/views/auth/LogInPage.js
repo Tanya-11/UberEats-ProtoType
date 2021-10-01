@@ -86,7 +86,7 @@ export const LoginPage = (props) => {
 
     const onNextClicked = () => {
         console.log('clcik');
-        Axios.post('http://3.143.169.133:3001/signin', {
+        Axios.post('http://18.220.7.192:3001/signin', {
             email: emailValue,
             password: passwordValue,
             persona: props.data

@@ -25,8 +25,8 @@ const RestCard = (props) => {
     //     e.stopPropagation()
     //     setisFav(!isFav)
     //     let api = ''
-    //     if (isFav) api = 'http://3.143.169.133:3001/favorites-add'
-    //     else api = 'http://3.143.169.133:3001/favorites-delete';
+    //     if (isFav) api = 'http://18.220.7.192:3001/favorites-add'
+    //     else api = 'http://18.220.7.192:3001/favorites-delete';
     //     console.log(api);
     //     let response = []
     //     try {
@@ -45,7 +45,7 @@ const RestCard = (props) => {
 
     // const getRestCardDetails = async () => {
     //     // e.preventDefault();
-    //     let api = 'http://3.143.169.133:3001/getDataBySearchTabTextForRest'
+    //     let api = 'http://18.220.7.192:3001/getDataBySearchTabTextForRest'
     //     let response = []
     //     try {
     //         response = await Axios.post(api, {

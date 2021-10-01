@@ -19,7 +19,7 @@
 //         let resData=[];
 //         useEffect(()=>{
 //             () => {
-//                 let data =  Axios.get('http://3.143.169.133:3001/dashboard')
+//                 let data =  Axios.get('http://18.220.7.192:3001/dashboard')
 //                     .then(({ data }) => data);
 //                     resData = data;
 
@@ -87,7 +87,7 @@ const Dashboard = () => {
     const getrestData = async () => {
         let response = []
         try {
-            response = await Axios.post('http://3.143.169.133:3001/getDataForRest', {
+            response = await Axios.post('http://18.220.7.192:3001/getDataForRest', {
                 city: 'San Jose',
                 mode: '',
                 searchTabText: 'dom',
@@ -112,7 +112,7 @@ const Dashboard = () => {
     const getfavData = async (rest) => {
         let response = []
         try {
-            response = await Axios.post('http://3.143.169.133:3001/get-favorites', {
+            response = await Axios.post('http://18.220.7.192:3001/get-favorites', {
                 user: 'liam@gmail.com',
                 restaurant: rest?.restId,
             }).then((res) => {

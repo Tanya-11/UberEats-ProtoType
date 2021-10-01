@@ -48,7 +48,7 @@ const SignUpPage = (props) => {
         }
     }, [])
     const onSignUpClicked = () => {
-        Axios.post('http://3.143.169.133:3001/signup', {
+        Axios.post('http://18.220.7.192:3001/signup', {
             name: nameValue,
             email: emailValue,
             password: passwordValue,

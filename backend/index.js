@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(
   cors(
     {
-      origin: 'http://3.143.169.133:3000',
+      origin: 'http://18.220.7.192:3000',
       methods: ["GET", "POST"],
       credentials: true,
     }
