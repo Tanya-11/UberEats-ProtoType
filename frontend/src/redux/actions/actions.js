@@ -11,7 +11,8 @@ export const USER_LOGGEDIN_INPROGRESS = 'USER_LOGGEDIN__INPROGRESS'
 export const RESTAURANT_LOGGEDIN_SUCCESS = 'RESTAURANT_LOGGEDIN_SUCCESS'
 export const RESTAURANT_LOGGEDIN_FAIL = 'RESTAURANT_LOGGEDIN_FAIL'
 export const RESTAURANT_LOGGEDIN_INPROGRESS = 'RESTAURANT_LOGGEDIN__INPROGRESS'
-
+export const ORDER_INCREMENT = 'ORDER_INCREMENT';
+export const ORDER_DECREMENT = 'ORDER_DECREMENT'
 //CUSTOMER SIGNUP 
 export const userSignedUpSuccess = (text) => (
     console.log('In userSignUp' + text),
@@ -59,15 +60,24 @@ export const restaurantSignedUpSuccess = (text) => ({
 })
 
 export const restLogInSuccess = (text) => ({
-    type: RESTAURANT_SIGNEDUP_SUCCESS,
+    type: RESTAURANT_LOGGEDIN_SUCCESS,
     payload: { text },
 })
 
 export const restLogInFail = (text) => ({
-    type: RESTAURANT_SIGNEDUP_FAIL,
+    type: RESTAURANT_LOGGEDIN_FAIL,
     payload: { text },
 })
 export const restLogInProgress = (text) => ({
     type: RESTAURANT_LOGGEDIN_INPROGRESS,
     payload: { text },
+})
+
+export const userOrderIncrement = (payload) => ({
+    type: ORDER_INCREMENT,
+    payload: { payload },
+})
+export const userOrderdecrement = (payload) => ({
+    type: ORDER_DECREMENT,
+    payload: { payload },
 })

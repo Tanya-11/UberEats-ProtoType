@@ -44,11 +44,11 @@ const SignUpPage = (props) => {
             setEmailPlaceholder('User Email');
             setNamePlaceholder('User Name');
             setPasswordPlaceholder('User Password');
-            setSignUpURL('/user-signup');
+            setSignUpURL('/user-login');
         }
     }, [])
     const onSignUpClicked = () => {
-        Axios.post('http://18.220.7.192:3001/signup', {
+        Axios.post('http://localhost:3001/signup', {
             name: nameValue,
             email: emailValue,
             password: passwordValue,
@@ -56,14 +56,15 @@ const SignUpPage = (props) => {
             persona: props.data
         })
             .then((res) => {
-                console.log(res)
-                dispatch(userSignedUpSuccess('Sign Up Success'))
+                console.log(emailValue)
+                dispatch(userSignedUpSuccess(['Sign Up Success', emailValue]));
+                console.log(signUpURL);
                 history.push(signUpURL)
             })
             .catch((err) => {
                 console.log(err)
                 setErrorMsg('Error in Signing in')
-                dispatch(userSignedUpFail('Sign Up Fail'))
+                dispatch(userSignedUpFail(['Sign Up Fail', emailValue]))
             })
         //    mapDispatchToProps.onSignUp(text);
     }

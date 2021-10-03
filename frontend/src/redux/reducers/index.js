@@ -1,14 +1,18 @@
 import {
-    signupReducer,
+    userSignupReducer,
     restLoginReducer,
-    userLoginReducer
+    userLoginReducer,
+    restSignupReducer,
+    OrderCountReducer
 } from "./reducers";
 import { combineReducers } from "redux";
 
 const allReducers = combineReducers({
-    signUp: signupReducer,
+    userSignUp: userSignupReducer,
+    restSignUp: restSignupReducer,
     restLogin: restLoginReducer,
-    userLogin: userLoginReducer
+    userLogin: userLoginReducer,
+    cart: OrderCountReducer
 });
 
 export default allReducers;

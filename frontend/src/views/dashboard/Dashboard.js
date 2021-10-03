@@ -19,7 +19,7 @@
 //         let resData=[];
 //         useEffect(()=>{
 //             () => {
-//                 let data =  Axios.get('http://18.220.7.192:3001/dashboard')
+//                 let data =  Axios.get('http://localhost:3001/dashboard')
 //                     .then(({ data }) => data);
 //                     resData = data;
 
@@ -87,7 +87,7 @@ const Dashboard = () => {
     const getrestData = async () => {
         let response = []
         try {
-            response = await Axios.post('http://18.220.7.192:3001/getDataForRest', {
+            response = await Axios.post('http://localhost:3001/getDataForRest', {
                 city: 'San Jose',
                 mode: '',
                 searchTabText: 'dom',
@@ -104,33 +104,12 @@ const Dashboard = () => {
         }
         // store the data into our books variable
         response.forEach(element => {
-            element['fav'] = true;
-            getfavData(element);
+            // element['fav'] = true;
+            // getfavData(element);
         });
         setrestData(response);
     }
-    const getfavData = async (rest) => {
-        let response = []
-        try {
-            response = await Axios.post('http://18.220.7.192:3001/get-favorites', {
-                user: 'liam@gmail.com',
-                restaurant: rest?.restId,
-            }).then((res) => {
-                console.log('getfavData', res)
-                if (res.status === 200 && res.data.length > 0) {
-                    //  setfavRest(true)
-                    rest['fav'] = true;
-                    console.log('Hey')
-                } else {
-                    console.log('bye')
-                    rest['fav'] = true;
-                    // setfavRest(false)
-                }
-            })
-        } catch (err) {
-            throw err
-        }
-    }
+
     return (
         <div>
             {

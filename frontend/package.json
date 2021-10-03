@@ -49,5 +49,5 @@
         "@babel/preset-env": "^7.15.6",
         "@babel/preset-react": "^7.14.5"
     },
-    "proxy": "http://18.220.7.192:3001"
+    "proxy": "http://localhost:3001"
 }

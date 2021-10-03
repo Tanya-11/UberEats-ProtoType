@@ -25,25 +25,11 @@ export const LoginPage = (props) => {
     const dispatch = useDispatch()
     const userLoginStatus = useSelector(state => state.userLogin);
     const restLoginStatus = useSelector(state => state.restLogin);
+    const [showPassInput, setShowPassInput] = useState(false)
     Axios.defaults.withCredentials = true;
 
     useEffect(() => {
-        if (props.data === 'customer') {
-            if (userLoginStatus.isLoggedIn) {
-                history.push('/dashboard')
-            }
-            else {
-                dispatch(userLogInProgress('In progress'));
-            }
-        }
-        else {
-            if (restLoginStatus.isLoggedIn) {
-                history.push('/dashboard')
-            }
-            else {
-                dispatch(restLogInProgress('In progress'));
-            }
-        }
+
         console.log(props.data);
         if (props.data === 'restaurant') {
             setEmailPlaceholder('Restaurant Email');
@@ -60,33 +46,61 @@ export const LoginPage = (props) => {
     }, []);
 
     const dispatchSuccessAction = (persona) => {
+        console.log("persoan", persona);
         switch (persona) {
             case 'customer':
-                return dispatch(userLogInSuccess('Success'));
+                return dispatch(userLogInSuccess(
+                    {
+                        text: 'Success',
+                        user: emailValue
+                    }
+                ));
             case 'restaurant':
-                return dispatch(restLogInSuccess('Success'));
+                return dispatch(restLogInSuccess(
+                    {
+                        text: 'Success',
+                        user: emailValue
+                    }
+                ));
         }
     }
     const dispatchFailAction = (persona) => {
         switch (persona) {
             case 'customer':
-                return dispatch(userLogInFail('Fail'));
+                return dispatch(userLogInFail(
+                    {
+                        text: 'Fail',
+                        user: emailValue
+                    }
+                ));
             case 'restaurant':
-                return dispatch(restLogInFail('Fail'));
+                return dispatch(restLogInFail({
+                    text: 'Fail',
+                    user: emailValue
+                }));
         }
     }
     const dispatchInProgressAction = (persona) => {
+        console.log("persoan", persona);
         switch (persona) {
             case 'customer':
-                return dispatch(userLogInProgress('In Progress'));
+                return dispatch(userLogInProgress(
+                    {
+                        text: 'In Progress',
+                        user: emailValue
+                    }
+                ));
             case 'restaurant':
-                return dispatch(restLogInProgress('In Progress'));
+                return dispatch(restLogInProgress({
+                    text: 'In Progress',
+                    user: emailValue
+                }));
         }
     }
 
     const onNextClicked = () => {
         console.log('clcik');
-        Axios.post('http://18.220.7.192:3001/signin', {
+        Axios.post('http://localhost:3001/signin', {
             email: emailValue,
             password: passwordValue,
             persona: props.data
@@ -102,6 +116,30 @@ export const LoginPage = (props) => {
                 setErrorMsg('Wrong Username or Password');
                 throw err
             })
+    }
+    const getPassword = () => {
+        setShowPassInput(true);
+        if (props.data === 'customer') {
+            if (userLoginStatus.isLoggedIn &&
+                userLoginStatus.text.user === emailValue) {
+
+                history.push('/dashboard')
+            }
+            else {
+
+                console.log("prognsbnsj", userLoginStatus);
+                //  dispatch(userLogInProgress('In progress'));
+            }
+        }
+        else {
+            if (restLoginStatus.isLoggedIn &&
+                restLoginStatus.text.user === emailValue) {
+                history.push('/dashboard')
+            }
+            else {
+                dispatch(restLogInProgress('In progress'));
+            }
+        }
     }
 
 
@@ -124,17 +162,28 @@ export const LoginPage = (props) => {
                         type="email"
                         placeholder={emailPlaceholder}
                     />
-                    <input
-                        value={passwordValue}
-                        onChange={(e) => setPasswordValue(e.target.value)}
-                        type="password"
-                        placeholder={passwordPlaceholder}
-                    />
-                    <button
-                        // disabled={!emailValue || !passwordValue} 
-                        onClick={onNextClicked}>
-                        Next
-                    </button>
+                    {showPassInput &&
+                        <input
+                            value={passwordValue}
+                            onChange={(e) => setPasswordValue(e.target.value)}
+                            type="password"
+                            placeholder={passwordPlaceholder}
+                        />
+                    }
+                    {!showPassInput &&
+                        <button
+                            // disabled={!emailValue || !passwordValue} 
+                            onClick={getPassword}>
+                            Next
+                        </button>
+                    }
+                    {showPassInput &&
+                        <button
+                            // disabled={!emailValue || !passwordValue} 
+                            onClick={onNextClicked}>
+                            Next
+                        </button>
+                    }
                     <button
                         onClick={() => {
                             history.push(signUpURL)

@@ -9,14 +9,14 @@ const PORT = 3001;
 // const bodyParser = require('body-parser');
 const router = express.Router();
 const app = express();
-app.use(express.urlencoded({ extended: true }));
+//app.use(express.urlencoded({ extended: true }));
 // app.use(bodyParser.json());
 app.use(express.json());
 
 app.use(
   cors(
     {
-      origin: 'http://18.220.7.192:3000',
+      origin: 'http://localhost:3000',
       methods: ["GET", "POST"],
       credentials: true,
     }
@@ -29,7 +29,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    maxAge: 200
+    maxAge: 200000000000000
   }
 }))
 
@@ -48,6 +48,21 @@ const saltRounds = 10;
 /**
  * All POST Calls
  */
+
+app.get('/logOut', (req, res) => {
+  // console.log('sess', req.session);
+  // window.localStorage.clear();
+  // console.log(localStorage);
+  //console.log('res', res);
+  req.session.destroy();
+  //.console.log('sess', req.session);
+  res.redirect('http://localhost:3000');
+  res.send('call happened');
+
+})
+
+
+
 app.post('/signin', (req, res) => {
   console.log("email-", (req.body));
   let api = '';
@@ -220,9 +235,11 @@ app.post('/dashboard', (req, res) => {
 
 app.post('/favorites-add', (req, res) => {
   console.log("fav", req.body);
-  const [user, restaurant] = req.body;
-  console.log(user, restaurant);
-  let sql = `INSERT fav_restaurant (custID, restID) values(?,?)`;
+  const { user, restaurant } = req.body;
+  console.log("fav", user);
+  console.log("fav", restaurant);
+  //console.log(user, restaurant);
+  let sql = `INSERT INTO fav_restaurant (custId, restId) values(?,?)`;
   db.query(sql, [user, restaurant], (err, result) => {
     if (err) {
       res.status(400).json(err);
@@ -235,10 +252,10 @@ app.post('/favorites-add', (req, res) => {
   })
 });
 app.post('/favorites-delete', (req, res) => {
-  const [user, restaurant] = req.body;
+  const { user, restaurant } = req.body;
   let sql = `DELETE FROM fav_restaurant WHERE custId = ? AND restId = ?`;
   db.query(sql, [user, restaurant], (err, result) => {
-    console.log(res);
+    //  console.log(res);
     if (err) {
       res.status(400).json(err);
       console.log(`Invalid User or Restaurant Name${err}`);
@@ -256,6 +273,21 @@ app.post('/get-favorites', (req, res) => {
     if (err) {
       res.status(400).json(err);
       console.log(`Invalid User Name:${err}`);
+    }
+    else {
+      res.status(200).json(result);
+      console.log(result);
+    }
+  })
+});
+app.post('/place-order', (req, res) => {
+  //let input = [req.//];
+  let sql = `INSERT INTO orders(orderId, orderStatus, custId, dishId, quantity) Values
+   (?,?,?,?,?)`;
+  db.query(sql, [...req.body], (err, result) => {
+    if (err) {
+      res.status(400).json(err);
+      console.log(`Error in Inserting Order:${err}`);
     }
     else {
       res.status(200).json(result);

@@ -17,14 +17,14 @@ const RestCardDetail = () => {
     useEffect(() => {
         if (localStorage.getItem('RestCardDetails')) {
             //   setName(localStorage.getItem('RestCardDetails').restName);
-            console.log(dish);
+            console.log("dd", dish);
             getRestDishDetails(JSON.parse(localStorage.getItem('RestCardDetails')).restId);
         }
     }, []);
 
     const getRestDishDetails = async (restId) => {
-        console.log(restId);
-        let api = 'http://18.220.7.192:3001/getDataForRestDish'
+        console.log("hdd", restId);
+        let api = 'http://localhost:3001/getDataForRestDish'
         let response = []
         try {
             response = await Axios.post(api, {
@@ -58,18 +58,18 @@ const RestCardDetail = () => {
         }
     }
 
-    // const clickcall = () => {
-    //     console.log(dish);
-    //     if (!localStorage.getItem('OrderCount')) {
-    //         localStorage.setItem('OrderCount',
-    //             0
-    //         )
-    //     }
-    //     let count = parseInt(localStorage.getItem('OrderCount'));
-    //     localStorage.setItem('OrderCount',
-    //         count + 1
-    //     )
-    // }
+    const clickcall = () => {
+        console.log(dish);
+        if (!localStorage.getItem('OrderCount')) {
+            localStorage.setItem('OrderCount',
+                0
+            )
+        }
+        let count = parseInt(localStorage.getItem('OrderCount'));
+        localStorage.setItem('OrderCount',
+            count + 1
+        )
+    }
 
     return (
         <div className={styles.RestCardDetail} data-testid="RestCardDetail">
@@ -87,17 +87,12 @@ const RestCardDetail = () => {
                     </div>
                 </div>
                 <div className={styles.dishcardWrapper}
-                // onClick={clickcall}
                 >
                     <div className={styles.dishcards}>
                         {
-                            dish.map((element) => {
-                                return (
-                                    <div>
-                                        <RestDishCard data={element} />
-                                    </div>
-                                )
-                            })
+                            dish.map((result, i) => (
+                                <RestDishCard key={i} data={result}></RestDishCard>
+                            ))
                         }
                     </div>
                 </div>

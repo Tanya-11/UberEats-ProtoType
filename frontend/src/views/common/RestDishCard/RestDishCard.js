@@ -1,17 +1,33 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
 import styles from './RestDishCard.module.scss';
 import AddIcon from '@mui/icons-material/Add';
-import localStorage from 'redux-persist/es/storage';
+import { userOrderIncrement, userOrderdecrement } from '../../../redux/actions/actions'
+import { useDispatch, useSelector } from 'react-redux';
+
+
+
+
 const RestDishCard = (props) => {
-  const [order, setOrder] = useState(() => {
-    return localStorage.getItem('order') || [];
-  });
+
+  const dispatch = useDispatch();
+  //let [countOrder, setCountOrder] = useState(0);
+  //let countOrder = useSelector(state => state.cart);
+  // const [order, setOrder] = useState(() => {
+  //   // return localStorage.getItem('order') || [];
+  //   countOrder = useSelector(state => state.orderCount);
+  // });
+
 
   const addToCart = () => {
-    console.log("clcik", props.data);
+    console.log("clicklk", props);
+    //setCountOrder(c++){ orderCount, DishId}
+    // console.log("co", countOrder);
+    dispatch(userOrderIncrement(
+      props.data.dishId
+    ));
+
     //setOrder(prev => [...prev, props.data]);
-    localStorage.setItem('order', JSON.stringify(order));
+    // localStorage.setItem('order', JSON.stringify(order));
   }
   return (
     <div className={styles.RestDishCard}
@@ -38,9 +54,5 @@ const RestDishCard = (props) => {
     </div>
   )
 };
-
-RestDishCard.propTypes = {};
-
-RestDishCard.defaultProps = {};
 
 export default RestDishCard;

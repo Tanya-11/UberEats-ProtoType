@@ -21,13 +21,25 @@ const Persona = () => {
   }
   return (
     <div className={styles.Persona} data-testid="Persona">
-      <h1 onClick={() => { history.push('/restaurant-login') }}>
-        Rest owner
-      </h1>
-      <h1 onClick={() => { history.push('/user-login') }}>
-        User
-      </h1>
+      <h1>UberEats</h1>
+      <div className={styles.PersonaWrapper}>
+        <div className={styles.restaurant}
+          onClick={() => { history.push('/restaurant-login') }}>
+          <div className={styles.restaurantImg}></div>
+          <h2>
+            Restaurant owner
+          </h2>
+        </div>
+        <div className={styles.customer}
+          onClick={() => { history.push('/user-login') }}>
+          <div className={styles.customerImg}></div>
+          <h2>
+            User
+          </h2>
+        </div>
+      </div>
     </div>
+
   )
 };
 

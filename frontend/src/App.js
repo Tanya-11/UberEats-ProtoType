@@ -15,7 +15,7 @@ function App() {
     const imageUrl = ' '
 
     const addCustomerData = () => {
-        // Axios.post("http://18.220.7.192:3001/signup", {
+        // Axios.post("http://localhost:3001/signup", {
         //   name: name,
         //   dob: dob,
         //   email: email,
@@ -27,7 +27,7 @@ function App() {
         // }).then(()=>{
         //   console.log("Success");
         // })
-        Axios.get('http://18.220.7.192:3001/login').then((res) => {
+        Axios.get('http://localhost:3001/login').then((res) => {
             console.log('success', res)
         })
     }
