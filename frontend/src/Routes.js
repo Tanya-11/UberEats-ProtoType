@@ -7,42 +7,30 @@ import RestCardDetail from './views/common/RestCardDetail/RestCardDetail'
 import { DashRoutes } from './views/dashboard/DashRoutes';
 import Header from './views/dashboard/Header';
 import Persona from './views/common/Persona/Persona';
-import OrderDetails from './views/OrderDetails/OrderDetails'
+import Cart from './views/Cart/Cart'
 export const Routes = () => {
     return (
         <Router>
-            <Switch>
-                <Route path="/" exact>
-                    <Persona></Persona>
-                </Route>
-                <Route path="/user-login" exact>
-                    <LoginPage data={'customer'}></LoginPage>
-                </Route>
-                {/* <PrivateRoute path="/restaurant-login"
-                    component={LoginPage}></PrivateRoute> */}
-                <Route path="/restaurant-login" exact>
-                    <LoginPage data={'restaurant'}></LoginPage>
-                </Route>
-                <Route path="/user-signup" exact>
-                    <SignUpPage data={'customer'}></SignUpPage>
-                </Route>
-                <Route path="/restaurant-signup" exact>
-                    <SignUpPage data={'restaurant'}></SignUpPage>
-                </Route>
-                <PrivateRoute path="/dashboard">
-                    <Header />
-                    <DashRoutes></DashRoutes>
+            <Header />
+            {/* <Switch> */}
+            {/* <PrivateRoute path="/dashboard">
+                    <Dashboard></Dashboard>
                 </PrivateRoute>
-                <PrivateRoute path="/orderDetails">
-                    <Header />
-                    <OrderDetails></OrderDetails>
-                </PrivateRoute>
-                {/* <Route path="/dashboard">
-                    <Header />
-                    <DashRoutes></DashRoutes>
+                <Route path="/dashboard/restaurant-details" exact>
+                    <RestCardDetail />
                 </Route> */}
-                <Route path="*" component={NotFound} />
-            </Switch>
+            {/* <Route path="/Cart">
+                {/* <Header /> */}
+            {/* <Cart></Cart> */}
+            {/* </Route>  */}
+            {/* } */}
+
+            <Route path="/">
+                {/* <Header /> */}
+                <DashRoutes></DashRoutes>
+            </Route>
+            {/* <Route path="*" component={NotFound} /> */}
+            {/* </Switch> */}
         </Router>
     )
 }

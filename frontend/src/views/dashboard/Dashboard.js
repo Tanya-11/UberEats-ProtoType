@@ -70,45 +70,47 @@ import { useState, useEffect } from 'react'
 import Axios from 'axios'
 import RestCard from '../common/RestCard'
 import Header from './Header'
+import { useSelector } from 'react-redux'
 
 const Dashboard = () => {
     const [restData, setrestData] = useState([])
-    const [favRest, setfavRest] = useState(false)
+    const [favRest, setfavRest] = useState(false);
+    const customer = useSelector(state => state.userLogin.text.user);
     Axios.defaults.withCredentials = true;
 
     // + adding the use
     useEffect(() => {
-        // we will use async/await to fetch this data
-        getrestData() //uncomment later, commented to check fav data
-        //    getfavData()
+        Promise.all([getRestData, getFavData])
+            .then((res) => {
+                console.log("Promise" + JSON.stringify(res[1].data));
+                res[0].data.map(el => {
+                    res[1].data.map(item => {
+                        if (el.restId === item.restId) {
+                            console.log("favvvvv" + item.restId);
+                            el['fav'] = true;
+                        }
+                    }
+                    )
+                })
+                setrestData(res[0].data)
+            })
+            .catch((err) => {
+                throw err;
+            })
+    }, [])
 
-        //setfavRest();
-    }, []) // <- you may need to put the setBooks function in this array
-    const getrestData = async () => {
-        let response = []
-        try {
-            response = await Axios.post('http://localhost:3001/getDataForRest', {
-                city: 'San Jose',
-                mode: '',
-                searchTabText: 'dom',
-            }).then(
-                (result) => {
-                    console.log('Api res-', result);
 
-                    return result.data
-                }
-                // ({ data }) => data
-            )
-        } catch (err) {
-            throw err
-        }
-        // store the data into our books variable
-        response.forEach(element => {
-            // element['fav'] = true;
-            // getfavData(element);
+    const getRestData =
+        Axios.post('http://localhost:3001/getDataForRest', {
+            city: 'San Jose',
+            mode: '',
+            searchTabText: 'dom',
         });
-        setrestData(response);
-    }
+
+    const getFavData =
+        Axios.post('http://localhost:3001/get-favorites', {
+            user: customer,
+        })
 
     return (
         <div>

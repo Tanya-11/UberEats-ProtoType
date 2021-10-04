@@ -124,44 +124,44 @@ let text = {
     text: 0,
     dishId: '',
     restId: '',
-}
 
-export const orderCountReducer = (state = [], action) => {
+}
+let total = 0
+
+export const orderCountReducer = (state = {
+    'text': [text]
+    // 'total': total
+}, action) => {
     const { type, payload } = action
     console.log(action)
     switch (type) {
         case ACTIONS.ORDER_INCREMENT: {
-            const { text, dishId, dishName, restId, restName, price } = payload.text
-            let orders = state;
-            state = [];
+            const { text, dishId, restId } = payload.text;
             let found = false;
-            orders.map(el => {
-                console.log(el);
-                if (el.dishId === dishId && el.restId === restId) {
-                    console.log(text);
-                    el.text = el.text + text;
-                    found = true;
-                }
-            })
-            if (found === false) {
-                const status = {
-                    text: text,
-                    dishId: dishId,
-                    dishName: dishName,
-                    restId: restId,
-                    restName: restName,
-                    price: price
-                }
-                orders.push(status)
+            console.log("st" + JSON.stringify(state.text));
+            console.log("p" + JSON.stringify(payload));
+            total = total + 1
+            // state.text.map(el => {
+            //     console.log(el);
+            //     if (el.dishId === dishId && el.restId === restId) {
+            //         el.text = el.text + 1;
+            //         found = true;
+            //     }
+            // })
+            // if (!found) {
+            console.log('not found');
+            const status = {
+                text: text,
+                dishId: dishId,
+                restId: restId
             }
-            console.log(orders);
-            return state.concat(orders);
-        }
-        case ACTIONS.ORDER_PLACED: {
-            console.log('act' + action);
-            console.log('st' + state);
-            state = [];
-            return state;
+            state.text.concat(status);
+            //    state.total = total;
+
+            //  }
+            console.log("pushed" + JSON.stringify(state));
+            console.log(state.total);
+            // return state;
         }
         default:
             return state

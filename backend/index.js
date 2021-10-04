@@ -49,18 +49,6 @@ const saltRounds = 10;
  * All POST Calls
  */
 
-app.get('/logOut', (req, res) => {
-  // console.log('sess', req.session);
-  // window.localStorage.clear();
-  // console.log(localStorage);
-  //console.log('res', res);
-  req.session.destroy();
-  //.console.log('sess', req.session);
-  res.redirect('http://localhost:3000');
-  res.send('call happened');
-
-})
-
 
 
 app.post('/signin', (req, res) => {
@@ -280,14 +268,71 @@ app.post('/get-favorites', (req, res) => {
     }
   })
 });
-app.post('/place-order', (req, res) => {
-  //let input = [req.//];
-  let sql = `INSERT INTO orders(orderId, orderStatus, custId, dishId, quantity) Values
+app.post('/place-orders', (req, res) => {
+  let sql = `INSERT INTO orders(orderStatus, custId, dishId,restId, quantity) Values
    (?,?,?,?,?)`;
-  db.query(sql, [...req.body], (err, result) => {
+  db.query(sql, [req.body.orderStatus, req.body.custId, req.body.dishId, req.body.restId, req.body.quantity], (err, result) => {
     if (err) {
       res.status(400).json(err);
       console.log(`Error in Inserting Order:${err}`);
+    }
+    else {
+      res.status(200).json('Updated Successfully');
+      console.log(result);
+    }
+  })
+});
+
+app.post('/get-orders', (req, res) => {
+  let sql = `SELECT * FROM orders WHERE custId = ?`;
+  db.query(sql, [req.body.custId], (err, result) => {
+    if (err) {
+      res.status(400).json(err);
+      console.log(`Error in fetching data:${err}`);
+    }
+    else {
+      res.status(200).json(result);
+      console.log(result);
+    }
+  })
+});
+
+
+app.post('/get-address', (req, res) => {
+  let sql = `SELECT address1, address2 FROM customer WHERE email = ?`;
+  db.query(sql, [req.body.custId], (err, result) => {
+    if (err) {
+      res.status(400).json(err);
+      console.log(`Error in fetching data:${err}`);
+    }
+    else {
+      res.status(200).json(result);
+      console.log(result);
+    }
+  })
+});
+
+app.post('/set-address', (req, res) => {
+  let sql = `UPDATE customer SET address1 = ?, address2= ? WHERE (email = ?)`;
+  db.query(sql, [req.body.address1 || '', req.body.address2 || '', req.body.custId], (err, result) => {
+    if (err) {
+      res.status(400).json(err);
+      console.log(`Error in fetching data:${err}`);
+    }
+    else {
+      res.status(200).json(result);
+      console.log(result);
+    }
+  })
+});
+
+
+app.post('/profile', (req, res) => {
+  let sql = `SELECT * FROM customer WHERE email = ?`;
+  db.query(sql, [req.body.custId], (err, result) => {
+    if (err) {
+      res.status(400).json(err);
+      console.log(`Error in fetching data:${err}`);
     }
     else {
       res.status(200).json(result);

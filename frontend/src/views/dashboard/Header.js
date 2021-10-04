@@ -1,24 +1,30 @@
 import Axios from 'axios'
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import './header.scss';
+import { userLogInFail, USER_LOGOUT } from '../../redux/actions/actions';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import Modal from '../common/Modal/Modal';
+import CartModal from '../Cart/CartModal';
+
 //import localStorage from 'redux-persist/es/storage';
-import LogoutIcon from '@mui/icons-material/Logout';
 const Header = () => {
     const [deliveryMode, setDeliveryMode] = useState(true)
     const [location, setLocation] = useState('')
-    const [searchString, setSearchString] = useState('')
-    let count = useSelector(state => state.cart[state.cart.length - 1].orderCount
-    );
+    const [searchString, setSearchString] = useState('');
+    const [isPopUp, setIsPopUp] = useState(false);
+    const history = useHistory();
+    const dispatch = useDispatch();
+    const [showCartPopUp, setCartPopUp] = useState(false);
+    let count = useSelector(state => state.cart.length);
     Axios.defaults.withCredentials = true;
 
-    const history = useHistory();
+
 
     useEffect(() => {
         console.log("count", count);
-    }, [count])
+    }, [])
     const changeDeliveryMode = () => {
         setDeliveryMode(!deliveryMode)
         console.log(deliveryMode)
@@ -27,22 +33,16 @@ const Header = () => {
         history.push('/dashboard');
     }
 
-    const logOut = () => {
-        localStorage.clear();
-        history.push('/')
-        // Axios.get('http://localhost:3001/logOut')
-        //     .then((res) => {
-        //         console.log('logout successful', res);
-        //     })
-        //     .catch((err) => {
-        //         console.log('logout fail', err);
-        //     })
 
-    }
     //Axios.post('http://localhost:3001/dashboard')
 
     const goToOrder = () => {
-        history.push('/orderDetails')
+        //history.push('/dashboard/cart-details')
+        setCartPopUp(!showCartPopUp)
+    }
+    const showPopUp = () => {
+        console.log('clicked' + isPopUp);
+        setIsPopUp(!isPopUp);
     }
 
     return (
@@ -72,12 +72,24 @@ const Header = () => {
                 <button onClick={goToOrder}>
                     <ShoppingCartOutlinedIcon
                         className="cartIcon" />
-                    <input type="number" disabled value={count}></input>
+                    <input type="text" disabled value={count}></input>
                 </button>
             </div>
-            <div className="logout" onClick={logOut}>
-                <LogoutIcon></LogoutIcon>
+
+            {showCartPopUp && <div className="cartModal" >
+                <span onClick={goToOrder}>X</span>
+                <CartModal></CartModal>
+                {count > 0 && <button onClick={() => {
+                    goToOrder();
+                    history.push('/dashboard/cart-details')
+                }}>Proceed to Checkout</button>}
             </div>
+            }
+
+            <div className="user-logo" onClick={showPopUp}>
+
+            </div>
+            {isPopUp && <div className="modal"><Modal /></div>}
         </div>
     )
 }

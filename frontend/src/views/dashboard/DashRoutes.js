@@ -14,6 +14,7 @@ export const DashRoutes = () => {
                     <Route path="/dashboard/restaurant-details" exact>
                         <RestCardDetail />
                     </Route>
+
                 </Switch>
             </Router>
         </div>

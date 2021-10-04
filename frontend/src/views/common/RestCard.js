@@ -22,29 +22,7 @@ const RestCard = (props) => {
     // useEffect(() => {
     //     //   setisFav(getfavData());
     // }, [])
-    const getfavData = async (rest) => {
-        let response = []
-        try {
-            response = await Axios.post('http://localhost:3001/get-favorites', {
-                user: 'liam@gmail.com',
-                // restaurant: rest?.restId,
-            }).then((res) => {
-                console.log('getfavData', res)
-                if (res.status === 200 && res.data.length > 0) {
-                    //  setfavRest(true)
-                    rest['fav'] = true;
-                    console.log('Hey')
-                } else {
-                    console.log('bye')
-                    rest['fav'] = false;
-                    // setfavRest(false)
-                }
-            })
-        } catch (err) {
-            throw err
-        }
-        console.log(response);
-    }
+
 
     const setfavData = async (e) => {
         e.preventDefault()
@@ -94,7 +72,6 @@ const RestCard = (props) => {
         e.preventDefault()
         history.push('/dashboard/restaurant-details');
         localStorage.setItem('RestCardDetails', JSON.stringify(props.data));
-        //  getRestCardDetails()
     }
 
     return (
@@ -109,9 +86,9 @@ const RestCard = (props) => {
                 <div
                     onClick={setfavData}
                 >{isFav === true ?
-                    <h1><FavoriteTwoToneIcon /></h1>
+                    <div><FavoriteTwoToneIcon /></div>
                     :
-                    <h1>{<FavoriteBorderTwoToneIcon />}</h1>
+                    <div><FavoriteBorderTwoToneIcon /></div>
                     }
                 </div>
             </div>
