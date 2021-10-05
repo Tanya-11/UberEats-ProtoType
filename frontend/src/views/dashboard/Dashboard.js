@@ -109,7 +109,7 @@ const Dashboard = () => {
 
     const getFavData =
         Axios.post('http://localhost:3001/get-favorites', {
-            user: customer,
+            email: customer,
         })
 
     return (

@@ -85,7 +85,7 @@ const RestCard = (props) => {
                 <h3 className="rest-name-container--title"> {props.data.restName}</h3>
                 <div
                     onClick={setfavData}
-                >{isFav === true ?
+                >{isFav !== undefined && isFav === true ?
                     <div><FavoriteTwoToneIcon /></div>
                     :
                     <div><FavoriteBorderTwoToneIcon /></div>

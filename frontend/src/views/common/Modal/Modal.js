@@ -19,7 +19,7 @@ const Modal = () => {
   return (
     <div className={styles.Modal} data-testid="Modal">
       <ul>
-        <li onClick={() => { history.push('/user-profile') }}>Profile</li><hr />
+        <li onClick={() => { history.push('/customer-profile') }}>Profile</li><hr />
         <li onClick={() => { history.push('/dashboard/order-details') }}>Orders</li><hr />
         <li onClick={logOut}>Log Out <LogoutIcon /></li>
       </ul>

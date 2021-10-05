@@ -257,7 +257,7 @@ app.post('/favorites-delete', (req, res) => {
 
 app.post('/get-favorites', (req, res) => {
   let sql = `SELECT * FROM fav_restaurant WHERE custId = ?`;
-  db.query(sql, [req.body.user, req.body.restaurant], (err, result) => {
+  db.query(sql, [req.body.email], (err, result) => {
     if (err) {
       res.status(400).json(err);
       console.log(`Invalid User Name:${err}`);
@@ -327,11 +327,12 @@ app.post('/set-address', (req, res) => {
 });
 
 
-app.post('/profile', (req, res) => {
+app.post('/get-profile', (req, res) => {
   let sql = `SELECT * FROM customer WHERE email = ?`;
   db.query(sql, [req.body.custId], (err, result) => {
     if (err) {
       res.status(400).json(err);
+
       console.log(`Error in fetching data:${err}`);
     }
     else {
@@ -340,6 +341,41 @@ app.post('/profile', (req, res) => {
     }
   })
 });
+app.post('/set-profile', (req, res) => {
+  console.log(req.body);
+  // const [name, val] = [{ ...req.body }, custId];
+
+  let sql = `UPDATE customer SET name = ?, email= ?, phone = ?, city = ?, state = ?, country = ?  WHERE (email = ?)`;
+  db.query(sql, [req.body.name, req.body.email, req.body.phone, req.body.city, req.body.state, req.body.country, req.body.custId],
+    (err, result) => {
+      if (err) {
+        res.status(400).json(err);
+
+        console.log(`Error in fetching data:${err}`);
+      }
+      else {
+        res.status(200).json(result);
+        console.log(result);
+      }
+    })
+});
+
+
+
+app.post('/get-rest-fav', (req, res) => {
+  let sql = `SELECT * FROM restaurant WHERE restId = ?`;
+  db.query(sql, [req.body.restId], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json(err);
+    }
+    else {
+      console.log(result);
+      res.status(200).json(result);
+    }
+  })
+})
+
 
 
 

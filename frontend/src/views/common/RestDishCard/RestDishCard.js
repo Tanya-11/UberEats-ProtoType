@@ -17,20 +17,20 @@ const RestDishCard = (props) => {
   const addToCart = () => {
 
 
-    if (orders.length > 0 && orders[0].restId === props.data.restName) {
-      dispatch(userOrderIncrement(
-        {
-          text: 1,
-          dishId: props.data.dishId,
-          dishName: props.data.dishName,
-          restId: props.data.restId,
-          restName: props.data.restName,
-          price: props.data.price
-        }
-      ));
-    } else {
-      setErrorMsg(`Your Order contains items from ${orders[0].restName}, Want to Create a new Order from ${props.data.restName}`)
-    }
+    // if (orders.length > 0 && orders[0].restId === props.data.restName) {
+    dispatch(userOrderIncrement(
+      {
+        text: 1,
+        dishId: props.data.dishId,
+        dishName: props.data.dishName,
+        restId: props.data.restId,
+        restName: props.data.restName,
+        price: props.data.price
+      }
+    ));
+    // } else {
+    //   setErrorMsg(`Your Order contains items from ${orders[0].restName}, Want to Create a new Order from ${props.data.restName}`)
+    // }
   }
   return (
     <div className={styles.RestDishCard}
