@@ -141,6 +141,7 @@ app.post('/getDataBySearchTabTextForDish', (req, res) => {
   FROM dishes as d JOIN restaurant as r
   ON r.restId = d.restRef AND r.city LIKE "%${req.body.city}%" 
   AND r.deliveryMode LIKE "%${req.body.mode}%" 
+  AND d.category LIKE "${req.body.category}"
   AND (d.dishName LIKE "%${req.body.searchTabText}%"
   OR r.restName LIKE "%${req.body.searchTabText}%")`;
   db.query(sql, (err, resp) => {
@@ -458,7 +459,7 @@ app.post('/set-order-status', (req, res) => {
 
 app.post('/get-dishes', (req, res) => {
   console.log(req.body.orderStatus);
-  let sql = `SELECT * FROM dishes  where restId=?`;
+  let sql = `SELECT * FROM dishes  where restRef=?`;
   db.query(sql, [req.body.restId], (err, result) => {
     if (err) {
       console.log(err);
@@ -471,7 +472,38 @@ app.post('/get-dishes', (req, res) => {
   })
 })
 
+//
+// 
+//restRef = ? AND
+// req.body.restRef,
+//,
+//req.body.ingredients, req.body.dishName, 
+// where  dishId = ?
+//[req.body.dishId]
+app.post('/update-dishData', (req, res) => {
+  console.log(req.body);
+  let sql = '';
+  if (req.body.dishId && req.body.dishId > 0) {
+    sql = `UPDATE dishes SET dishName = ?,  ingredients = ?, price= ?, description= ?, category= ?
+   where dishId=${req.body.dishId}`;
+  }
+  else {
+    sql = `INSERT INTO dishes(dishName,ingredients,price,description,category) VALUES(?,?,?,?,?)`;
+  }
 
+  console.log(sql)
+
+  db.query(sql, [req.body.dishName, req.body.ingredients, req.body.price, req.body.description, req.body.category], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json(err);
+    }
+    else {
+      console.log(result);
+      res.status(200).json(result);
+    }
+  })
+})
 
 
 
