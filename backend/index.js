@@ -137,12 +137,12 @@ app.post('/signup', async (req, res) => {
 
 app.post('/getDataBySearchTabTextForDish', (req, res) => {
   //  if(req?.body?.searchTabText!=='') {
-  let sql = `SELECT DISTINCT  d.dishName, d.restRef, r.restName 
+  let sql = `SELECT DISTINCT r.restId, r.restName 
   FROM dishes as d JOIN restaurant as r
   ON r.restId = d.restRef AND r.city LIKE "%${req.body.city}%" 
   AND r.deliveryMode LIKE "%${req.body.mode}%" 
-  AND d.dishName LIKE "%${req.body.searchTabText}%" 
-  LIMIT 4`;
+  AND (d.dishName LIKE "%${req.body.searchTabText}%"
+  OR r.restName LIKE "%${req.body.searchTabText}%")`;
   db.query(sql, (err, resp) => {
     if (err) {
       res.status(400).json(err);
@@ -269,9 +269,9 @@ app.post('/get-favorites', (req, res) => {
   })
 });
 app.post('/place-orders', (req, res) => {
-  let sql = `INSERT INTO orders(orderStatus, custId, dishId,restId, quantity) Values
-   (?,?,?,?,?)`;
-  db.query(sql, [req.body.orderStatus, req.body.custId, req.body.dishId, req.body.restId, req.body.quantity], (err, result) => {
+  let sql = `INSERT INTO orders(orderStatus, custId, dishId,dishName,restId, quantity, price, date) Values
+   (?,?,?,?,?,?,?,?)`;
+  db.query(sql, [req.body.orderStatus, req.body.custId, req.body.dishId, req.body.dishName, req.body.restId, req.body.quantity, req.body.price, req.body.date], (err, result) => {
     if (err) {
       res.status(400).json(err);
       console.log(`Error in Inserting Order:${err}`);
@@ -284,8 +284,12 @@ app.post('/place-orders', (req, res) => {
 });
 
 app.post('/get-orders', (req, res) => {
-  let sql = `SELECT * FROM orders WHERE custId = ?`;
-  db.query(sql, [req.body.custId], (err, result) => {
+  let sql = ''
+  if (req.body.user === 'restId')
+    sql = `SELECT * FROM orders WHERE restId = ?`;
+  if (req.body.user === 'custId')
+    sql = `SELECT * FROM orders WHERE custId = ?`;
+  db.query(sql, [req.body.email], (err, result) => {
     if (err) {
       res.status(400).json(err);
       console.log(`Error in fetching data:${err}`);
@@ -362,7 +366,7 @@ app.post('/set-profile', (req, res) => {
 
 
 
-app.post('/get-rest-fav', (req, res) => {
+app.post('/get-rest-data', (req, res) => {
   let sql = `SELECT * FROM restaurant WHERE restId = ?`;
   db.query(sql, [req.body.restId], (err, result) => {
     if (err) {
@@ -376,6 +380,96 @@ app.post('/get-rest-fav', (req, res) => {
   })
 })
 
+app.post('/set-rest-data', (req, res) => {
+  console.log(req.body.restData);
+  const {
+    restName, email,
+    phoneNo,
+    addressLine,
+    city,
+    state,
+    country,
+    description,
+    openHrs,
+    deliveryMode
+  } = req.body.restData;
+  let sql = `UPDATE restaurant SET
+    restName = ?,
+    restId  = ?,
+    phoneNo  = ?,
+    addressLine = ?,
+    city = ?,
+    state = ?,
+    country = ?,
+    description = ?,
+    openHrs = ?,
+    deliveryMode = ?
+  WHERE restId= ?`;
+  db.query(sql, [restName,
+    email,
+    phoneNo,
+    addressLine,
+    city,
+    state,
+    country,
+    description,
+    openHrs,
+    deliveryMode, email], (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(400).json(err);
+      }
+      else {
+        console.log(result);
+        res.status(200).json(result);
+      }
+    })
+})
+
+app.get('/get-orderStatus', (req, res) => {
+  let sql = `SELECT * FROM orderStatus`;
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json(err);
+    }
+    else {
+      console.log(result);
+      res.status(200).json(result);
+    }
+  })
+})
+
+
+app.post('/set-order-status', (req, res) => {
+  console.log(req.body.orderStatus);
+  let sql = `UPDATE orders SET orderStatus = ?, date= ?  where orderId=?`;
+  db.query(sql, [req.body.orderStatus, req.body.date, req.body.orderId], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json(err);
+    }
+    else {
+      console.log(result);
+      res.status(200).json(result);
+    }
+  })
+})
+
+app.post('/get-dishes', (req, res) => {
+  console.log(req.body.orderStatus);
+  let sql = `SELECT * FROM dishes  where restId=?`;
+  db.query(sql, [req.body.restId], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).json(err);
+    }
+    else {
+      console.log(result);
+      res.status(200).json(result);
+    }
+  })
+})
 
 
 
