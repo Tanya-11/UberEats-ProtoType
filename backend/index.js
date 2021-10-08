@@ -137,12 +137,13 @@ app.post('/signup', async (req, res) => {
 
 app.post('/getDataBySearchTabTextForDish', (req, res) => {
   //  if(req?.body?.searchTabText!=='') {
+  console.log(req.body);
   let sql = `SELECT DISTINCT r.restId, r.restName 
   FROM dishes as d JOIN restaurant as r
   ON r.restId = d.restRef AND r.city LIKE "%${req.body.city}%" 
   AND r.deliveryMode LIKE "%${req.body.mode}%" 
-  AND d.category LIKE "${req.body.category}"
-  AND (d.dishName LIKE "%${req.body.searchTabText}%"
+  AND d.category LIKE "%${req.body.category}%"
+  AND (d.category LIKE "%${req.body.searchTabText}%"
   OR r.restName LIKE "%${req.body.searchTabText}%")`;
   db.query(sql, (err, resp) => {
     if (err) {
@@ -504,7 +505,23 @@ app.post('/update-dishData', (req, res) => {
     }
   })
 })
-
+/**
+ */
+app.post('/get-orders-receipt', (req, res) => {
+  let email = "liam@gmail.com"
+  let sql = `SELECT count(o.orderId) as quantity, o.dishName, o.custId, sum(o.price) as price, o.restId, o.date, o.orderStatus, s.orderStatusTitle
+  FROM orderStatus as s JOIN orders as o on o.orderStatus = s.orderStatusId group by o.date;`;
+  db.query(sql, [email], (err, result) => {
+    if (err) {
+      res.status(400).json(err);
+      console.log(`Error in fetching data:${err}`);
+    }
+    else {
+      res.status(200).json(result);
+      console.log(result);
+    }
+  })
+});
 
 
 

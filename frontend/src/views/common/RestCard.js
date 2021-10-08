@@ -6,13 +6,13 @@ import Axios from 'axios'
 import { useHistory } from 'react-router-dom'
 
 const RestCard = (props) => {
-    const [isFav, setisFav] = useState(props.data.fav)
+    const [isFav, setisFav] = useState(false)
     const history = useHistory()
     console.log('restcard', props)
 
     useEffect(() => {
         console.log("@@@", props.data);
-        setisFav(isFav)
+        setisFav(props.data.fav)
         console.log('jjj' + isFav);
         // getfavData('');
     }, [props.data])
@@ -85,10 +85,11 @@ const RestCard = (props) => {
                 <h3 className="rest-name-container--title"> {props.data.restName}</h3>
                 <div
                     onClick={setfavData}
-                >{isFav !== undefined && isFav === true ?
-                    <div><FavoriteTwoToneIcon /></div>
-                    :
-                    <div><FavoriteBorderTwoToneIcon /></div>
+                >{isFav !== null && <>
+                    {isFav === true ? <div><FavoriteTwoToneIcon /></div> :
+                        <div><FavoriteBorderTwoToneIcon /></div>
+                    }
+                </>
                     }
                 </div>
             </div>

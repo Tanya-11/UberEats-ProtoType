@@ -29,7 +29,7 @@ const Header = () => {
         setDeliveryMode(!deliveryMode)
         console.log(deliveryMode)
     }
-    const navigateToDash = () => {
+    const navigateToDashboard = () => {
         history.push('/dashboard');
     }
 
@@ -48,26 +48,7 @@ const Header = () => {
     return (
         <div className="header-container">
             <div className="uber-logo"
-                onClick={navigateToDash}></div>
-            <div className="toggle-switch">
-                <button onClick={changeDeliveryMode}>Click</button>
-            </div>
-            <div className="location">
-                <input
-                    type="text"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                    placeholder="location"
-                />
-            </div>
-            <div className="search">
-                <input
-                    type="text"
-                    value={searchString}
-                    onChange={(e) => setSearchString(e.target.value)}
-                    placeholder="search"
-                />
-            </div>
+                onClick={navigateToDashboard}></div>
             <div className="cart">
                 <button onClick={goToOrder}>
                     <ShoppingCartOutlinedIcon
@@ -77,7 +58,7 @@ const Header = () => {
             </div>
 
             {showCartPopUp && <div className="cartModal" >
-                <span onClick={goToOrder}>X</span>
+                <span className="cross" onClick={goToOrder}>X</span>
                 <CartModal></CartModal>
                 {count > 0 && <button onClick={() => {
                     goToOrder();
@@ -86,10 +67,9 @@ const Header = () => {
             </div>
             }
 
-            <div className="user-logo" onClick={showPopUp}>
-
-            </div>
+            <div className="user-logo" onClick={showPopUp} />
             {isPopUp && <div className="modal"><Modal /></div>}
+
         </div>
     )
 }

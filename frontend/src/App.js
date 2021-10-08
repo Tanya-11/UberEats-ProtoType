@@ -11,6 +11,8 @@ import OrderDetails from './views/OrderDetails/OrderDetails';
 import CustomerProfile from './views/CustomerProfile/CustomerProfile';
 import Cart from './views/Cart/Cart';
 import PrivateRoute from './auth/PrivateRoute';
+import RestProfile from './views/Restaurant/rest-profile'
+import About from './views/Restaurant/about';
 function App() {
     return (
         <div className="parent-container">
@@ -31,23 +33,29 @@ function App() {
                     <SignUpPage data={'restaurant'} />
                 </Route>
                 <PrivateRoute path="/dashboard">
-                    <Header />
-                    <Route path="/dashboard" exact>
-                        <Dashboard></Dashboard>
-                    </Route>
-                    <Route path="/dashboard/restaurant-details" exact>
-                        <RestCardDetail />
-                    </Route>
-                    <Route path='/dashboard/cart-details' exact>
-                        <Cart></Cart>
-                    </Route>
-                    <Route path='/dashboard/order-details' exact>
-                        <OrderDetails></OrderDetails>
-                    </Route>
-
+                    <div className="header">
+                        <Header />
+                    </div>
+                    <div className="mainContent">
+                        <Route path="/dashboard" exact>
+                            <Dashboard></Dashboard>
+                        </Route>
+                        <Route path="/dashboard/restaurant-details" exact>
+                            <RestCardDetail />
+                        </Route>
+                        <Route path='/dashboard/cart-details' exact>
+                            <Cart></Cart>
+                        </Route>
+                        <Route path='/dashboard/order-details' exact>
+                            <OrderDetails></OrderDetails>
+                        </Route>
+                    </div>
                 </PrivateRoute>
                 <PrivateRoute path='/customer-profile' exact>
                     <CustomerProfile />
+                </PrivateRoute>
+                <PrivateRoute path='/rest-dashboard' exact>
+                    <RestProfile />
                 </PrivateRoute>
             </Router>
 

@@ -5,6 +5,7 @@ import Axios from 'axios';
 import {
   userOrderPlaced
 } from '../../redux/actions/actions';
+import Orders from '../Restaurant/orders';
 
 const Cart = () => {
   const [orderPlaced, setOrderPlaced] = useState(false);
@@ -68,11 +69,14 @@ const Cart = () => {
     for (var i = 0; i < orders.length; i++) {
       // total += (+orders[i].price * orders.text[i]);
       res.push(await Axios.post('http://localhost:3001/place-orders', {
-        orderStatus: 1,
+        orderStatus: 0,
         custId: customer,
         dishId: orders[i].dishId,
+        dishName: orders[i].dishName,
         restId: orders[i].restId,
         quantity: orders[i].text,
+        price: orders[i].price,
+        date: new Date()
       }))
     }
     for (var i = 0; i < res.length; i++) {

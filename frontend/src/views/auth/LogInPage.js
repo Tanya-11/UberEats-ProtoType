@@ -108,7 +108,10 @@ export const LoginPage = (props) => {
             .then((res) => {
                 console.log('success', res)
                 dispatchSuccessAction(props.data)
-                history.push('/dashboard')
+                console.log('persona' + props.data);
+                if (props.data === 'customer') {
+                    history.push('/dashboard')
+                } else history.push('/rest-dashboard')
             })
             .catch((err) => {
                 dispatchFailAction(props.data);
@@ -119,7 +122,16 @@ export const LoginPage = (props) => {
     }
     const getPassword = () => {
         setShowPassInput(true);
-        if (props.data === 'customer') {
+        if (props.data === 'restaurant') {
+            if (restLoginStatus.isLoggedIn &&
+                restLoginStatus.text.user === emailValue) {
+                history.push('/rest-dashboard')
+            }
+            else {
+                dispatch(restLogInProgress('In progress'));
+            }
+        }
+        else {
             if (userLoginStatus.isLoggedIn &&
                 userLoginStatus.text.user === emailValue) {
 
@@ -129,15 +141,6 @@ export const LoginPage = (props) => {
 
                 console.log("prognsbnsj", userLoginStatus);
                 //  dispatch(userLogInProgress('In progress'));
-            }
-        }
-        else {
-            if (restLoginStatus.isLoggedIn &&
-                restLoginStatus.text.user === emailValue) {
-                history.push('/dashboard')
-            }
-            else {
-                dispatch(restLogInProgress('In progress'));
             }
         }
     }

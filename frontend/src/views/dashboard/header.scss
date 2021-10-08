@@ -1,9 +1,12 @@
 .header-container {
-    display: flex;
+    display: grid;
+    grid-template-columns: 2% 80% 10% 5% 5%;
     align-items: center;
     height: 96px;
+    justify-content: space-between;
 
     .uber-logo {
+        grid-column: 2;
         content: url('../../assets/Uber_Eats.svg');
         object-fit: scale-down;
     }
@@ -61,17 +64,21 @@
         border-radius: 0;
         background: #4d4c4c;
         box-shadow: 29px 29px 58px #222121, -29px -29px 58px #787777;
+        .cross {
+            cursor: pointer;
+        }
     }
 
     .user-logo {
         content: url('../../assets/profile.png');
         width: 30px;
         position: relative;
+        grid-column: 4;
     }
     .modal {
         border: solid 1px;
         position: absolute;
         right: 1%;
-        top: 16%;
+        top: 14%;
     }
 }
