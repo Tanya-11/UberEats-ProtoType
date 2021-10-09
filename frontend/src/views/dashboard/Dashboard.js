@@ -162,13 +162,14 @@ const Dashboard = () => {
                     />
                 </div>
                 <div className="category" onChange={(e) => handleChange(e)}>
+
                     <label>
-                        <input type="radio" value="Veg" name="category" />
-                        Veg
+                        <input type="radio" value="Vegetarian" name="category" />
+                        Vegetarian
                     </label>
                     <label>
-                        <input type="radio" value="Non-Veg" name="category" />
-                        Non-Veg
+                        <input type="radio" value="Halal" name="category" />
+                        Halal
                     </label>
                 </div>
                 <div className="search">

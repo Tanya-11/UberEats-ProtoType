@@ -11,15 +11,34 @@
         justify-content: space-around;
         height: 140px;
         .mode {
-            display: grid;
-            input {
-                margin-right: 2px;
-                width: inherit;
+            display: flex;
+            label {
+                border-radius: 50px;
+                background: #f0f0f0;
+                margin: 7px;
+                padding: 7px;
+                cursor: pointer;
+                input {
+                    appearance: none;
+                }
             }
             .location,
             .search {
                 input {
                     width: 90%;
+                }
+            }
+        }
+        .category {
+            display: flex;
+            label {
+                border-radius: 50px;
+                background: #f0f0f0;
+                margin: 7px;
+                padding: 7px;
+                cursor: pointer;
+                input {
+                    appearance: none;
                 }
             }
         }

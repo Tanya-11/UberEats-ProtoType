@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import styles from './OrderDetails.scss'
 import Axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
-import ActiveOrders from './active-orders'
-import PastOrders from './past-orders'
+import Orders from './orders'
+
 const OrderDetails = () => {
     const customer = useSelector((state) => state.userLogin.text.user)
     const [orders, setOrders] = useState([])
@@ -13,7 +13,7 @@ const OrderDetails = () => {
     Axios.defaults.withCredentials = true
     const [index, setIndex] = useState(0)
     useEffect(() => {
-        Axios.post('http://localhost:3001/get-orders-receipt', {
+        Axios.post('http://localhost:3001/get-orders-list', {
             email: customer,
         }).then((res) => {
             console.log(res.data)
@@ -41,10 +41,9 @@ const OrderDetails = () => {
                 </ul>
             </div>
             <div className="right-content">
-                {index === 0 && pastOrders.length > 0 && <ActiveOrders data={pastOrders} />}
-                {index === 1 && <ActiveOrders data={activeOrders} />}
+                {index === 0 && pastOrders.length > 0 && <Orders data={pastOrders} />}
+                {index === 1 && <Orders data={activeOrders} />}
             </div>
-            {/* <button onClick={submit}></button> */}
         </div>
     )
 }

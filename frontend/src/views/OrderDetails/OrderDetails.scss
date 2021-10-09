@@ -6,7 +6,6 @@
         grid-column: 1;
         border-radius: 0px;
         background: #aaf3d0;
-        // box-shadow: 18px 18px 36px #aaf3d0, -18px -18px 36px #aaf3d0;
         ul {
             margin: 0;
             padding: 0;
@@ -31,6 +30,16 @@
             padding: 10px;
             font-size: smaller;
             margin: 2px;
+            input {
+                border: 0;
+                background: transparent;
+                text-decoration: underline;
+                font-size: smaller;
+            }
+            .badge {
+                background-color: grey;
+                padding: 5%;
+            }
         }
     }
 }

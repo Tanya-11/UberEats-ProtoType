@@ -75,7 +75,7 @@ const Cart = () => {
         dishName: orders[i].dishName,
         restId: orders[i].restId,
         quantity: orders[i].text,
-        price: orders[i].price,
+        price: parseInt(orders[i].text) * parseInt(orders[i].price),
         date: new Date()
       }))
     }
