@@ -50,16 +50,6 @@ const Header = () => {
                 </button>
             </div>
             {showCartPopUp && <CartModal data={showCartPopUp} modal={goToOrder}></CartModal>}
-            {/* {showCartPopUp && <div className="cartModal" >
-                <span className="cross" onClick={goToOrder}>X</span>
-                <CartModal></CartModal>
-                {count > 0 && <button onClick={() => {
-                    goToOrder();
-                    history.push('/dashboard/cart-details')
-                }}>Proceed to Checkout</button>}
-            </div>
-            } */}
-
             <div className="user-logo" onClick={showPopUp} />
             {isPopUp && (
                 <div className="modal-wrapper">

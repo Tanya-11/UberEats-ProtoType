@@ -13,7 +13,7 @@ const Dashboard = () => {
     const [searchString, setSearchString] = useState('')
     const [searchData, setSearchData] = useState({
         city: localStorage.getItem('city') || 'San Jose',
-        mode: 'delivery',
+        mode: '',
         category: '',
         searchTabText: '',
     })
@@ -48,13 +48,13 @@ const Dashboard = () => {
     }, [searchData])
 
     const handleChange = (e) => {
-        console.log(e.target.value)
+        // console.log(e.target.value)
         const { name, value } = e.target
         setSearchData((prevSate) => ({
             ...prevSate,
             [name]: value,
         }))
-        console.log(searchData)
+        // console  .log(searchData)
     }
     const handleChangebtn = (val) => setValue(val)
     return (
@@ -62,12 +62,19 @@ const Dashboard = () => {
             <div className="leftContent">
                 <div className="mode" onChange={(e) => handleChange(e)}>
                     <label>
-                        <input type="radio" checked value="delivery" name="mode" />
+                        <input type="radio" value="delivery" name="mode"
+                            checked={searchData.mode === 'delivery'} />
                         Delivery
                     </label>
                     <label>
-                        <input type="radio" value="pick" name="mode" />
+                        <input type="radio" value="pick" name="mode"
+                            checked={searchData.mode === 'pick'} />
                         Pick Up
+                    </label>
+                    <label>
+                        <input type="radio" value="both" name="mode"
+                            checked={searchData.mode === 'both'} />
+                        Both
                     </label>
                 </div>
                 <div className="location">
@@ -75,7 +82,7 @@ const Dashboard = () => {
                         type="text"
                         name="city"
                         value={searchData.city}
-                        onChange={(e) => handleChange(e)}
+                        onChange={(e) => { handleChange(e); localStorage.setItem('city', e.target.value) }}
                         placeholder="search City"
                     />
                 </div>

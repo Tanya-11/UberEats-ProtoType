@@ -51,7 +51,6 @@ const About = () => {
                     deliveryMode: res.data[0].deliveryMode,
                 })
                 setImage(res.data[0].image)
-                console.log(typeof res.data[0].openHrs.split('-')[0])
                 setStartOpenHrs(res.data[0].openHrs.split(' - ')[0])
                 setEndOpenHrs(res.data[0].openHrs.split(' - ')[1])
 
@@ -63,37 +62,39 @@ const About = () => {
     }
 
     const handleChange = (event) => {
-        console.log(startOpenHrs)
-        event.preventDefault()
+        // console.log(startOpenHrs)
+        // event.preventDefault()
         setChanged(true)
-        console.log(event.target.value)
+        // console.log(event.target.value)
         const { name, value } = event.target
-        console.log(name)
-        console.log(value)
-        console.log(restData)
+        // console.log(name)
+        // console.log(value)
+        // console.log(restData)
         setRestData((prevState) => ({
             ...prevState,
             [name]: value,
+            openHrs: `${startOpenHrs} - ${endOpenHrs}`,
         }))
 
         console.log(restData)
     }
 
     const handleChangeOpenHrs = (e) => {
+        console.log(e)
         setChanged(true)
-        if (e.name === 'startOpenHrs') setStartOpenHrs(e.value)
-        if (e.name === 'endOpenHrs') {
-            if (e.value > startOpenHrs) {
-                setEndOpenHrs(e.value)
-                setRestData((prevState) => ({
-                    ...prevState,
-                    openHrs: `${startOpenHrs} - ${endOpenHrs}`,
-                }))
-            } else {
-                setEndOpenHrs(0)
-                setOpenHrsMsg('End Hrs should be greater than Start Hr')
-            }
-        }
+        // if (e.name === 'startOpenHrs') setStartOpenHrs(e.value)
+        // if (e.name === 'endOpenHrs') {
+        //     if (e.value > startOpenHrs) {
+        //     setEndOpenHrs(e.value)
+        setRestData((prevState) => ({
+            ...prevState,
+            openHrs: `${startOpenHrs} - ${endOpenHrs}`,
+        }))
+        // } else {
+        //     setEndOpenHrs(0)
+        //     setOpenHrsMsg('End Hrs should be greater than Start Hr')
+        // }
+
         console.log(startOpenHrs)
         console.log(endOpenHrs)
         console.log(restData)
@@ -130,7 +131,6 @@ const About = () => {
         //     console.log(err)
         // })
     }
-
     return (
         <div className="rightContent">
             <label className="label">
@@ -207,13 +207,19 @@ const About = () => {
                 <input
                     type="time"
                     name="startOpenHrs"
-                    onChange={(e) => handleChangeOpenHrs(e.target)}
+                    onChange={(e) => {
+                        setChanged(true)
+                        setOpenHrsMsg(e.target.value)
+                    }}
                     value={startOpenHrs}
                 ></input>
                 <input
                     type="time"
                     name="endOpenHrs"
-                    onChange={(e) => handleChangeOpenHrs(e.target)}
+                    onChange={(e) => {
+                        setChanged(true)
+                        setEndOpenHrs(e.target.value)
+                    }}
                     value={endOpenHrs}
                 ></input>
             </label>
@@ -237,6 +243,15 @@ const About = () => {
                             checked={restData.deliveryMode === 'pick'}
                         />
                         Pick Up
+                    </label>
+                    <label style={{ width: '100px' }}>
+                        <input
+                            type="radio"
+                            value="both"
+                            name="deliveryMode"
+                            checked={restData.deliveryMode === 'both'}
+                        />
+                        Both
                     </label>
                 </label>
                 <input

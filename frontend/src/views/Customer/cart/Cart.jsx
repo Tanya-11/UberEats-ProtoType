@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styles from './Cart.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import Axios from 'axios'
+import { useHistory } from 'react-router'
 import { userOrderPlaced } from '../../../redux/actions/actions'
 import { Button, Table } from 'react-bootstrap'
 
@@ -11,12 +12,15 @@ const Cart = () => {
     const customer = useSelector((state) => state.userLogin.text.user)
     const [cartStatus, setCartStatus] = useState('Cart is Empty')
     const dispatch = useDispatch()
+    const history = useHistory()
     const [total, setTotal] = useState(0)
     const [restName, setRestName] = useState('')
     const [addr1, setAddr1] = useState('')
     const [addr2, setAddr2] = useState('')
+    const [mode, setMode] = useState('')
 
     useEffect(() => {
+        setMode(JSON.parse(localStorage.getItem('RestCardDetails')).deliveryMode)
         console.log('calcul', orders)
         let total = 0
         if (orders.length > 0) setRestName(orders[0].restName)
@@ -58,7 +62,7 @@ const Cart = () => {
     const placeOrder = async () => {
         setOrderPlaced(true)
         let res = []
-
+        setAddr()
         for (var i = 0; i < orders.length; i++) {
             // total += (+orders[i].price * orders.text[i]);
             res.push(
@@ -71,6 +75,7 @@ const Cart = () => {
                     quantity: orders[i].text,
                     price: parseInt(orders[i].text) * parseInt(orders[i].price),
                     date: new Date(),
+                    address: addr1,
                 })
             )
         }
@@ -82,6 +87,7 @@ const Cart = () => {
         setCartStatus('Order Placed')
 
         dispatch(userOrderPlaced([]))
+        history.push('/dashboard')
     }
 
     return (
@@ -114,7 +120,7 @@ const Cart = () => {
                     </Table>
                     <div className={styles.addr}>
                         <span>
-                            Address 1:
+                            Address:
                             <input
                                 type="text"
                                 value={addr1}
@@ -123,16 +129,31 @@ const Cart = () => {
                                 }}
                             />
                         </span>
-                        {/* <span>
-                            Address 2:
-                            <input
-                                type="text"
-                                value={addr2}
-                                onChange={(e) => {
-                                    setAddr2(e.target.value)
-                                }}
-                            />
+                        {/* <span style={{ display: 'inline-flex' }}>
+                            Mode:
+                            {
+                                // <>
+                                mode == 'both' && (
+                                    <div onChange={(e) => setMode(e.target.value)}>
+                                        <label>
+                                            <input type="radio" value="delivery" name="mode" />
+                                            Delivery
+                                        </label>
+                                        <label>
+                                            <input
+                                                type="radio"
+                                                value="pick"
+                                                name="mode"
+                                                // onChange={(e) => setMode(e.target.value)}
+                                            />
+                                            Pick Up
+                                        </label>
+                                    </div>
+                                )
+                            }
+                            {mode !== 'both' && <span>{mode}</span>}
                         </span> */}
+
                         <div style={{ margin: '3%' }}>
                             <Button type="submit" onClick={setAddr}>
                                 Save Address

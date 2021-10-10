@@ -110,7 +110,7 @@ export const LoginPage = (props) => {
                 console.log(`persona${props.data}`)
                 if (props.data === 'customer') {
                     history.push('/dashboard')
-                } else history.push('/rest-dashboard')
+                } else history.push('/rest-dashboard/about')
             })
             .catch((err) => {
                 dispatchFailAction(props.data)
@@ -123,7 +123,7 @@ export const LoginPage = (props) => {
         setShowPassInput(true)
         if (props.data === 'restaurant') {
             if (restLoginStatus.isLoggedIn && restLoginStatus.text.user === emailValue) {
-                history.push('/rest-dashboard')
+                history.push('/rest-dashboard/about')
             } else {
                 dispatch(restLogInProgress('In progress'))
             }

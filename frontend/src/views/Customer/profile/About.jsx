@@ -125,7 +125,13 @@ export const About = (props) => {
         <div>
             {image && (
                 <img
-                    style={{ width: '100px', height: '100px' }}
+                    style={{
+                        width: '100px',
+                        height: '100px',
+                        display: 'inline',
+                        margin: '12%',
+                        float: 'right',
+                    }}
                     src={`http://localhost:3000/${image}`}
                 />
             )}

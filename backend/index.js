@@ -1,18 +1,43 @@
 const express = require("express");
+const path = require("path")
 const session = require("express-session");
 const db = require('./utils/database');
 const cors = require('cors');
 const cookieParser = require("cookie-parser");
-
+const multer = require('multer')
+const fs = require('fs')
 const PORT = 3001;
 //process.env.PORT || 3001;
 // const bodyParser = require('body-parser');
 const router = express.Router();
 const app = express();
-//app.use(express.urlencoded({ extended: true }));
-// app.use(bodyParser.json());
+
 app.use(express.json());
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'images');
+  },
+  filename: (req, file, cb) => {
+    cb(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname);
+  }
+});
+const filefilter = (req, file, cb) => {
+  if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg'
+    || file.mimetype === 'image/jpeg') {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+}
+
+const upload = multer({
+  storage: storage,
+  fileFilter: filefilter,
+  // limits: { fileSize: 1000000 }
+});
+
+app.use('/images', express.static('images'));
 app.use(
   cors(
     {
@@ -28,9 +53,8 @@ app.use(session({
   secret: "some-secret",
   resave: false,
   saveUninitialized: false,
-  cookie: {
-    maxAge: 200000000000000
-  }
+  duration: 60 * 60 * 1000,
+  activeDuration: 5 * 60 * 1000,
 }))
 
 // db.connect((err)=>{
@@ -128,7 +152,7 @@ app.post('/signup', async (req, res) => {
 app.post('/getDataBySearchTabTextForDish', (req, res) => {
   //  if(req?.body?.searchTabText!=='') {
   console.log(req.body);
-  let sql = `SELECT DISTINCT r.restId, r.restName 
+  let sql = `SELECT DISTINCT r.restId, r.restName ,r.image, r.deliveryMode
   FROM dishes as d JOIN restaurant as r
   ON r.restId = d.restRef AND r.city LIKE "%${req.body.city}%" 
   AND r.deliveryMode LIKE "%${req.body.mode}%" 
@@ -261,9 +285,9 @@ app.post('/get-favorites', (req, res) => {
   })
 });
 app.post('/place-orders', (req, res) => {
-  let sql = `INSERT INTO orders(orderStatus, custId, dishId,dishName,restId, quantity, price, date) Values
-   (?,?,?,?,?,?,?,?)`;
-  db.query(sql, [req.body.orderStatus, req.body.custId, req.body.dishId, req.body.dishName, req.body.restId, req.body.quantity, req.body.price, req.body.date], (err, result) => {
+  let sql = `INSERT INTO orders(orderStatus, custId, dishId,dishName,restId, quantity, price, date, address) Values
+   (?,?,?,?,?,?,?,?,?)`;
+  db.query(sql, [req.body.orderStatus, req.body.custId, req.body.dishId, req.body.dishName, req.body.restId, req.body.quantity, req.body.price, req.body.date, req.body.address], (err, result) => {
     if (err) {
       res.status(400).json(err);
       console.log(`Error in Inserting Order:${err}`);
@@ -324,6 +348,7 @@ app.post('/set-address', (req, res) => {
 
 
 app.post('/get-profile', (req, res) => {
+  console.log(req.body);
   let sql = `SELECT * FROM customer WHERE email = ?`;
   db.query(sql, [req.body.custId], (err, result) => {
     if (err) {
@@ -341,8 +366,8 @@ app.post('/set-profile', (req, res) => {
   console.log(req.body);
   // const [name, val] = [{ ...req.body }, custId];
 
-  let sql = `UPDATE customer SET name = ?, email= ?, phone = ?, city = ?, state = ?, country = ?  WHERE (email = ?)`;
-  db.query(sql, [req.body.name, req.body.email, req.body.phone, req.body.city, req.body.state, req.body.country, req.body.custId],
+  let sql = `UPDATE customer SET name = ?, email= ?, phone = ?, city = ?, state = ?, country = ?, nickName = ? WHERE (email = ?)`;
+  db.query(sql, [req.body.name, req.body.email, req.body.phone, req.body.city, req.body.state, req.body.country, req.body.nickName, req.body.custId],
     (err, result) => {
       if (err) {
         res.status(400).json(err);
@@ -351,7 +376,7 @@ app.post('/set-profile', (req, res) => {
       }
       else {
         res.status(200).json(result);
-        console.log(result);
+        // console.log(result);
       }
     })
 });
@@ -463,14 +488,6 @@ app.post('/get-dishes', (req, res) => {
   })
 })
 
-//
-// 
-//restRef = ? AND
-// req.body.restRef,
-//,
-//req.body.ingredients, req.body.dishName, 
-// where  dishId = ?
-//[req.body.dishId]
 app.post('/update-dishData', (req, res) => {
   console.log(req.body);
   let sql = '';
@@ -529,6 +546,51 @@ app.post('/get-view-receipt', (req, res) => {
     }
   })
 });
+
+app.post('/upload-pic', upload.single('image'), (req, res) => {
+  console.log('print' + req.body.custId);
+  let param = '';
+  let sql = ''
+  if (req.body.custId) {
+    sql = "UPDATE customer SET image=? where email=?"
+    param = req.body.custId
+  }
+  else {
+    sql = "UPDATE restaurant SET image=? where restId=?"
+    param = req.body.restId
+  }
+  console.log(req.file.path);
+  console.log(param);
+  console.log(sql);
+  param = "food@gmail.com"
+  db.query(sql, [req.file.path, param], (err, result) => {
+    if (err) {
+      res.status(400).json(err);
+      console.log(`Error in fetching data:${err}`);
+    }
+    else {
+      res.status(200).json(req.file.path);
+      console.log(JSON.stringify(result));
+    }
+  })
+});
+
+app.get('/fetch-file', (req, res) => {
+  let sql = `select image from customer where email=?`;
+  db.query(sql, ['liam@gmail.com'], (err, result) => {
+    if (err) {
+      res.status(400).json(err);
+      console.log(`Error in fetching data:${err}`);
+    }
+    else {
+      res.status(200).json(result);
+      console.log(result);
+    }
+  })
+});
+
+
+
 
 
 app.listen(PORT, () => {

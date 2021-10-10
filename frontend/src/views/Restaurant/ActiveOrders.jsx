@@ -68,7 +68,7 @@ const ActiveOrders = () => {
     }, [])
 
     const showUserInfo = (custId, isClicked) => {
-        console.log('clcikwd' + isClicked)
+        console.log('clciked' + isClicked)
         setIsClicked(isClicked)
         if (isClicked) setUserInfo(custId)
         console.log(activeOrders)
