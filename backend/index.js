@@ -56,25 +56,17 @@ app.post('/signin', (req, res) => {
   let api = '';
   if (req.body.persona === 'customer') api = 'SELECT * from customer WHERE email=?';
   else api = 'SELECT * from restaurant WHERE restId=?'
-  // let sql = `SELECT * FROM customer WHERE UPPER(email) = '${req.body.email}'`;
   db.query(api, [req.body.email],
     async (err, result) => {
-      console.log('%%%%%%', result);
-      console.log('######', err);
       try {
-        // if (err) {
-        //   console.log(err, "%%%%%%%%%%%%%");
-        //   res.status(400).json('Wrong Username or password');
-        //   return;
-        // }
+        console.log(result);
         if (result && result?.length > 0) {
           console.log("result-", typeof (result[0].password));
           const validPassword = await bcrypt.compare(req.body.password, result[0].password);
           console.log("com", validPassword);
           if (validPassword) {
             req.session.user = result;
-            console.log("rrrr", req.session.user);
-            res.status(200).json("Valid User, Successfully loggedIn");
+            res.status(200).json(result);
           }
           else res.status(401).json("Wrong Password");
         }
@@ -96,11 +88,9 @@ app.post('/signup', async (req, res) => {
 
   if (req.body.persona === 'customer') {
     api = 'SELECT * from customer WHERE email=?';
-    // response = [req.body.email]
   }
   else {
     api = 'SELECT * from restaurant WHERE restId=?';
-    // response = [req.body.email]
   }
   db.query(api, [req.body.email],
     (err, result) => {
@@ -143,7 +133,7 @@ app.post('/getDataBySearchTabTextForDish', (req, res) => {
   ON r.restId = d.restRef AND r.city LIKE "%${req.body.city}%" 
   AND r.deliveryMode LIKE "%${req.body.mode}%" 
   AND d.category LIKE "%${req.body.category}%"
-  AND (d.category LIKE "%${req.body.searchTabText}%"
+  AND (d.dishName LIKE "%${req.body.searchTabText}%"
   OR r.restName LIKE "%${req.body.searchTabText}%")`;
   db.query(sql, (err, resp) => {
     if (err) {
@@ -385,7 +375,7 @@ app.post('/get-rest-data', (req, res) => {
 app.post('/set-rest-data', (req, res) => {
   console.log(req.body.restData);
   const {
-    restName, email,
+    restName, restId,
     phoneNo,
     addressLine,
     city,
@@ -408,7 +398,7 @@ app.post('/set-rest-data', (req, res) => {
     deliveryMode = ?
   WHERE restId= ?`;
   db.query(sql, [restName,
-    email,
+    restId,
     phoneNo,
     addressLine,
     city,
@@ -416,7 +406,7 @@ app.post('/set-rest-data', (req, res) => {
     country,
     description,
     openHrs,
-    deliveryMode, email], (err, result) => {
+    deliveryMode, restId], (err, result) => {
       if (err) {
         console.log(err);
         res.status(400).json(err);
@@ -489,12 +479,12 @@ app.post('/update-dishData', (req, res) => {
    where dishId=${req.body.dishId}`;
   }
   else {
-    sql = `INSERT INTO dishes(dishName,ingredients,price,description,category) VALUES(?,?,?,?,?)`;
+    sql = `INSERT INTO dishes(dishName,ingredients,price,description,category,restRef) VALUES(?,?,?,?,?,?)`;
   }
 
   console.log(sql)
 
-  db.query(sql, [req.body.dishName, req.body.ingredients, req.body.price, req.body.description, req.body.category], (err, result) => {
+  db.query(sql, [req.body.dishName, req.body.ingredients, req.body.price, req.body.description, req.body.category, req.body.restRef], (err, result) => {
     if (err) {
       console.log(err);
       res.status(400).json(err);
@@ -507,11 +497,13 @@ app.post('/update-dishData', (req, res) => {
 })
 /**
  */
-app.post('/get-orders-receipt', (req, res) => {
-  let email = "liam@gmail.com"
-  let sql = `SELECT count(o.orderId) as quantity, o.dishName, o.custId, sum(o.price) as price, o.restId, o.date, o.orderStatus, s.orderStatusTitle
-  FROM orderStatus as s JOIN orders as o on o.orderStatus = s.orderStatusId group by o.date;`;
-  db.query(sql, [email], (err, result) => {
+app.post('/get-orders-list', (req, res) => {
+  let sql = `SELECT count(o.orderId) as quantity, o.dishName, o.custId, sum(o.price) as price, r.restName, o.date, o.orderStatus, s.orderStatusTitle
+  FROM orders as o 
+  JOIN orderStatus as s on o.orderStatus = s.orderStatusId 
+  JOIN restaurant as r on r.restId = o.restId
+  group by o.date;`;
+  db.query(sql, [req.body.email], (err, result) => {
     if (err) {
       res.status(400).json(err);
       console.log(`Error in fetching data:${err}`);
@@ -523,70 +515,21 @@ app.post('/get-orders-receipt', (req, res) => {
   })
 });
 
+app.post('/get-view-receipt', (req, res) => {
+  console.log(req.body.date);
+  let sql = `SELECT sum(price) as total, price, dishName,quantity FROM orders WHERE date=?`;
+  db.query(sql, [req.body.date], (err, result) => {
+    if (err) {
+      res.status(400).json(err);
+      console.log(`Error in fetching data:${err}`);
+    }
+    else {
+      res.status(200).json(result);
+      console.log(result);
+    }
+  })
+});
 
-
-
-//   'INSERT INTO  order-status (order-status-id, order-status-title) VALUES (??,??)',
-// [1,'New']
-
-
-
-
-// db.execute('SELECT * FROM customer').then( res=>{
-//   console.log("success"
-//   + JSON.stringify(res[0]));
-// }
-// )
-
-
-// db.connect(function(err) {
-//   if (err) throw err;
-//   console.log("Connected!");
-// });
-
-
-// db.connect((err) => {
-//   if (err) throw err;
-//   let sql = `SELECT * FROM ??`;
-//   const values = ['customer'];
-
-//   // sends queries and receives results
-//   db.query(sql, values, (err, result) => {
-//     if (err) throw err;
-//     console.log(result);
-//     db.end();
-//   });
-// });
-
-
-
-
-
-
-// app.post('/create',(req,res)=>{
-//   console.log("request made"+JSON.stringify(req.body));
-//   const name =req.body.name;
-//   const dob = req.body.dob;
-//   const email = req.body.email;
-//   const phoneNo = req.body.phoneNo;
-//   const city = req.body.city;
-//   const state = req.body.state;
-//   const country= req.body.country;
-//   const imageUrl = req.body.imageUrl;
-//  // var sql = `INSERT INTO user_profile_table (email, name, password) VALUES ('${req.body.email.toUpperCase()}', '${req.body.name}', '${passwordHash.generate(req.body.password)}');`;
-//   db.query
-//   (
-//     'INSERT INTO customer(name,dob,email,phone, city, state, country, image) VALUES (?,?,?,?,?,?,?,?)',
-// [name, dob, email, phoneNo, city, state, country,imageUrl],
-//   (err,result)=>{
-//     if(err){
-//       console.log(err);
-//     }
-//     else{
-//       res.send("Values inserted");
-//     }
-//   })
-// })
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);

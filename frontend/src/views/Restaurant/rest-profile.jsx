@@ -1,47 +1,51 @@
 import React, { Component } from 'react'
 import './rest-profile.scss'
 import About from './about'
-import Orders from './orders'
+import Orders from './completed-orders'
 import ViewOrder from './view-orders'
+import ActiveOrders from './active-orders'
+import { Navbar, NavDropdown, Nav, Container } from 'react-bootstrap'
+import { connect } from 'react-redux'
+import { USER_LOGOUT } from '../../redux/actions/actions'
+import localStorage from 'redux-persist/es/storage'
+
 class RestProfile extends Component {
     constructor() {
         super()
-        this.state = { index: 0 }
-
-        this.setShowState = this.setShowState.bind(this)
-        this.handleSubmit = this.handleSubmit.bind(this)
+        this.logOut = this.logOut.bind(this)
     }
 
-    setShowState(val) {
-        console.log('clcik' + val)
-        this.setState({ index: val })
-        // this.setState({ index: 1 })
-        // console.log(event.target.value)
-    }
-    handleSubmit(event) {
-        alert('Your favorite flavor is: ' + this.state.value)
-        console.log(this.state.value)
-        event.preventDefault()
+    logOut = () => {
+        this.props.dispatch({ type: USER_LOGOUT })
+        localStorage.removeItem('deliveryMode')
     }
 
     render() {
         return (
-            <div className="RestProfile">
-                <div className="leftContent">
-                    <ul>
-                        <li onClick={() => this.setShowState(0)}>About</li>
-                        <li onClick={() => this.setShowState(1)}>View/Edit/Add Dishes</li>
-                        <li onClick={() => this.setShowState(2)}>Orders</li>
-                    </ul>
-                </div>
-                <div className="rightContent">
-                    {this.state.index === 0 && <About></About>}
-                    {this.state.index === 1 && <ViewOrder />}
-                    {this.state.index === 2 && <Orders />}
-                </div>
-            </div>
+            <Navbar bg="dark" variant="dark" expand="lg">
+                <Container>
+                    <Navbar.Brand href="#home">Restaurant Dashboard</Navbar.Brand>
+                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                    <Navbar.Collapse id="basic-navbar-nav">
+                        <Nav className="me-auto">
+                            <Nav.Link href="/rest-dashboard/about">About</Nav.Link>
+                            <Nav.Link href="/rest-dashboard/dishes">View/Edit/Add Dishes</Nav.Link>
+                            <NavDropdown title="Oders" id="basic-nav-dropdown">
+                                <NavDropdown.Item href="/rest-dashboard/active">
+                                    Active
+                                </NavDropdown.Item>
+                                <NavDropdown.Item href="/rest-dashboard/completed">
+                                    Completed
+                                </NavDropdown.Item>
+                            </NavDropdown>
+                            <Nav.Link onClick={this.logOut}>Log Out</Nav.Link>
+                        </Nav>
+                    </Navbar.Collapse>
+                </Container>
+            </Navbar>
         )
     }
 }
+const mapStateToProps = (state) => state
 
-export default RestProfile
+export default connect(mapStateToProps)(RestProfile)

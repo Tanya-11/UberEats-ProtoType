@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import Axios from 'axios'
 import './rest-profile.scss'
+import { Button } from 'react-bootstrap'
+
 const About = () => {
     const restaurant = useSelector((state) => state.restLogin.text.user)
-    const [startOpenHrs, setStartOpenHrs] = useState(0)
-    const [endOpenHrs, setEndOpenHrs] = useState(0)
+    const [startOpenHrs, setStartOpenHrs] = useState('00:00:00')
+    const [endOpenHrs, setEndOpenHrs] = useState('00:00:00')
     const [restData, setRestData] = useState({
         restName: '',
-        email: restaurant,
+        restId: restaurant,
         phoneNo: '',
         addressLine: '',
         city: '',
@@ -25,7 +27,6 @@ const About = () => {
 
     useEffect(() => {
         getRestData()
-        localStorage.setItem('deliveryMode', restData.deliveryMode)
     }, [])
     const getRestData = () => {
         Axios.post('http://localhost:3001/get-rest-data', {
@@ -33,12 +34,12 @@ const About = () => {
         })
             .then((res) => {
                 console.log(res)
-                // console.log(restName);
+                console.log(res.data[0])
                 setRestData({
                     restName: res.data[0].restName,
-                    email: restaurant,
+                    restId: restaurant,
                     phoneNo: res.data[0].phoneNo,
-                    address: res.data[0].address,
+                    addressLine: res.data[0].addressLine,
                     city: res.data[0].city,
                     state: res.data[0].state,
                     country: res.data[0].country,
@@ -46,7 +47,11 @@ const About = () => {
                     openHrs: res.data[0].openHrs,
                     deliveryMode: res.data[0].deliveryMode,
                 })
-                setStartOpenHrs(res.data[0].openHrs)
+                console.log(typeof res.data[0].openHrs.split('-')[0])
+                setStartOpenHrs(res.data[0].openHrs.split(' - ')[0])
+                setEndOpenHrs(res.data[0].openHrs.split(' - ')[1])
+
+                localStorage.setItem('deliveryMode', res.data[0].deliveryMode)
             })
             .catch((err) => {
                 console.log(err)
@@ -54,12 +59,14 @@ const About = () => {
     }
 
     const handleChange = (event) => {
-        //  event.preventDefault();
+        console.log(startOpenHrs)
+        event.preventDefault()
         setChanged(true)
         console.log(event.target.value)
         const { name, value } = event.target
         console.log(name)
         console.log(value)
+        console.log(restData)
         setRestData((prevState) => ({
             ...prevState,
             [name]: value,
@@ -68,29 +75,24 @@ const About = () => {
         console.log(restData)
     }
 
-    // const handleChangeDeliveryMode = (e) => {
-    //     setRestData({
-    //         deliveryMode: e.target.value
-    //     })
-    //     console.log(restData);
-    // }
-
     const handleChangeOpenHrs = (e) => {
         setChanged(true)
         if (e.name === 'startOpenHrs') setStartOpenHrs(e.value)
         if (e.name === 'endOpenHrs') {
             if (e.value > startOpenHrs) {
                 setEndOpenHrs(e.value)
-                setRestData({
-                    // ...prevState,
+                setRestData((prevState) => ({
+                    ...prevState,
                     openHrs: `${startOpenHrs} - ${endOpenHrs}`,
-                })
+                }))
             } else {
                 setEndOpenHrs(0)
                 setOpenHrsMsg('End Hrs should be greater than Start Hr')
             }
         }
-        console.log(e)
+        console.log(startOpenHrs)
+        console.log(endOpenHrs)
+        console.log(restData)
     }
 
     const submitRestaurantData = () => {
@@ -108,8 +110,8 @@ const About = () => {
     }
 
     return (
-        <div>
-            <label>
+        <div className="rightContent">
+            <label className="label">
                 Name:
                 <input
                     type="text"
@@ -118,16 +120,16 @@ const About = () => {
                     value={restData.restName}
                 ></input>
             </label>
-            <label>
+            <label className="label">
                 Email
                 <input
                     type="text"
                     name="restId"
                     onChange={(e) => handleChange(e)}
-                    value={restData.email}
+                    value={restData.restId}
                 ></input>
             </label>
-            <label>
+            <label className="label">
                 Phone
                 <input
                     type="number"
@@ -136,15 +138,15 @@ const About = () => {
                     value={restData.phoneNo}
                 ></input>
             </label>
-            <label>
+            <label className="label">
                 Address
                 <input
                     name="addressLine"
                     onChange={(e) => handleChange(e)}
-                    value={restData.address}
+                    value={restData.addressLine}
                 ></input>
             </label>
-            <label>
+            <label className="label">
                 City
                 <input
                     type="text"
@@ -153,7 +155,7 @@ const About = () => {
                     value={restData.city}
                 ></input>
             </label>
-            <label>
+            <label className="label">
                 State
                 <input
                     type="text"
@@ -162,7 +164,7 @@ const About = () => {
                     value={restData.state}
                 ></input>
             </label>
-            <label>
+            <label className="label">
                 Country
                 <input
                     name="country"
@@ -170,7 +172,7 @@ const About = () => {
                     value={restData.country}
                 ></input>
             </label>
-            <label>
+            <label className="label">
                 Description
                 <input
                     name="description"
@@ -178,7 +180,7 @@ const About = () => {
                     value={restData.description}
                 ></input>
             </label>
-            <label>
+            <label className="label">
                 Opening Hrs
                 <input
                     type="time"
@@ -193,26 +195,27 @@ const About = () => {
                     value={endOpenHrs}
                 ></input>
             </label>
-
-            <div>{openHrsMsg}</div>
             <div className="mode" onChange={(e) => handleChange(e)}>
-                <label>
-                    <input
-                        type="radio"
-                        value="delivery"
-                        name="deliveryMode"
-                        checked={restData.deliveryMode === 'delivery'}
-                    />
-                    Delivery
-                </label>
-                <label>
-                    <input
-                        type="radio"
-                        value="pick"
-                        name="deliveryMode"
-                        checked={restData.deliveryMode === 'pick'}
-                    />
-                    Pick Up
+                <label className="label">
+                    Mode:
+                    <label>
+                        <input
+                            type="radio"
+                            value="delivery"
+                            name="deliveryMode"
+                            checked={restData.deliveryMode === 'delivery'}
+                        />
+                        Delivery
+                    </label>
+                    <label>
+                        <input
+                            type="radio"
+                            value="pick"
+                            name="deliveryMode"
+                            checked={restData.deliveryMode === 'pick'}
+                        />
+                        Pick Up
+                    </label>
                 </label>
             </div>
             {/* <label>Delivery Mode:
@@ -228,14 +231,15 @@ const About = () => {
                 /> Pick Up
                 {/* <input name="deliveyMode" onChange={(e) => handleChange(e)} value={restData.deliveryMode}></input> 
             </label> }*/}
-            <button
+            <Button
+                variant="primary"
                 type="submit"
                 className="submit-button"
                 disabled={!changed}
                 onClick={submitRestaurantData}
             >
                 Save Changes
-            </button>
+            </Button>
         </div>
     )
 }

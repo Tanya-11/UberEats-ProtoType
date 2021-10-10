@@ -1,15 +1,16 @@
 .dashboardContent {
     display: grid;
-    grid-template-columns: max-content auto;
+    grid-template-columns: 25% 75%;
     height: 100%;
     .leftContent {
         grid-column: 1;
-        margin-left: 1%;
+        // margin-left: 1%;
         border-right: solid gray;
         display: inline-flex;
         flex-direction: column;
         justify-content: space-around;
         height: 140px;
+        align-items: center;
         .mode {
             display: flex;
             label {
@@ -18,9 +19,6 @@
                 margin: 7px;
                 padding: 7px;
                 cursor: pointer;
-                input {
-                    appearance: none;
-                }
             }
             .location,
             .search {
@@ -37,9 +35,6 @@
                 margin: 7px;
                 padding: 7px;
                 cursor: pointer;
-                input {
-                    appearance: none;
-                }
             }
         }
     }

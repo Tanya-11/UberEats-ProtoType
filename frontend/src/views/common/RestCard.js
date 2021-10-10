@@ -11,18 +11,8 @@ const RestCard = (props) => {
     console.log('restcard', props)
 
     useEffect(() => {
-        console.log("@@@", props.data);
         setisFav(props.data.fav)
-        console.log('jjj' + isFav);
-        // getfavData('');
     }, [props.data])
-    /**
-     * TODO: send logged in user for setfavdata in useeffect
-     */
-    // useEffect(() => {
-    //     //   setisFav(getfavData());
-    // }, [])
-
 
     const setfavData = async (e) => {
         e.preventDefault()
@@ -46,27 +36,7 @@ const RestCard = (props) => {
         } catch (err) {
             throw err
         }
-        // store the data into our books variable
     }
-
-    // const getRestCardDetails = async () => {
-    //     // e.preventDefault();
-    //     let api = 'http://localhost:3001/getDataBySearchTabTextForRest'
-    //     let response = []
-    //     try {
-    //         response = await Axios.post(api, {
-    //             city: 'San Jose',
-    //             mode: 'pick',
-    //             searchTabText: props.data.restRef,
-    //         }).then((data) => {
-    //             console.log('Card-', data)
-    //             return data
-    //         })
-    //     } catch (err) {
-    //         throw err
-    //     }
-    //     // store the data into our books variable
-    // }
 
     const goToRestCardDetails = (e) => {
         e.preventDefault()
@@ -80,8 +50,6 @@ const RestCard = (props) => {
         >
             <div className="image-container"></div>
             <div className="rest-name-container">
-                {/* {isFav === false && <div > <h1>hi</h1></div>} */}
-                {/* {isFav === true && <div > <h1>bye</h1></div>} */}
                 <h3 className="rest-name-container--title"> {props.data.restName}</h3>
                 <div
                     onClick={setfavData}

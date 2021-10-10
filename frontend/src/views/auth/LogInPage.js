@@ -11,15 +11,14 @@ import {
 } from '../../redux/actions/actions'
 import Axios from 'axios'
 import './auth.scss'
+import { Alert } from 'react-bootstrap'
 
 export const LoginPage = (props) => {
     const [errorMsg, setErrorMsg] = useState('')
     const [emailValue, setEmailValue] = useState('');
-    //const [nameValue, setNameValue] = useState('');
     const [passwordValue, setPasswordValue] = useState('');
     const [emailPlaceholder, setEmailPlaceholder] = useState('Type Email');
     const [passwordPlaceholder, setPasswordPlaceholder] = useState('Type Password');
-    //const [namePlaceholder, setNamePlaceholder] = useState('Type Name');
     const [signUpURL, setSignUpURL] = useState('')
     const history = useHistory()
     const dispatch = useDispatch()
@@ -33,13 +32,11 @@ export const LoginPage = (props) => {
         console.log(props.data);
         if (props.data === 'restaurant') {
             setEmailPlaceholder('Restaurant Email');
-            // setNamePlaceholder('Restaurant Name');
             setPasswordPlaceholder('Restaurant Password');
             setSignUpURL('/restaurant-signup');
         }
         else {
             setEmailPlaceholder('User Email');
-            //  setNamePlaceholder('User Name');
             setPasswordPlaceholder('User Password');
             setSignUpURL('/user-signup');
         }
@@ -99,7 +96,6 @@ export const LoginPage = (props) => {
     }
 
     const onNextClicked = () => {
-        console.log('clcik');
         Axios.post('http://localhost:3001/signin', {
             email: emailValue,
             password: passwordValue,
@@ -107,6 +103,7 @@ export const LoginPage = (props) => {
         })
             .then((res) => {
                 console.log('success', res)
+                localStorage.setItem('city', res.data[0].city)
                 dispatchSuccessAction(props.data)
                 console.log('persona' + props.data);
                 if (props.data === 'customer') {
@@ -140,18 +137,20 @@ export const LoginPage = (props) => {
             else {
 
                 console.log("prognsbnsj", userLoginStatus);
-                //  dispatch(userLogInProgress('In progress'));
             }
         }
+    }
+    const goToPersons = () => {
+        history.push('/');
     }
 
 
     return (
         <div className="login-container">
             <div className="login-wrapper">
-                <div className="logo" />
+                <div className="logo" onClick={goToPersons} />
                 <h1>Welcome Back</h1>
-                {errorMsg && <div className="fail">{errorMsg}</div>}
+                {errorMsg && <Alert variant="danger" className="fail">{errorMsg}</Alert>}
                 <div className="login-form">
                     {/* <input
                         value={nameValue}

@@ -15,6 +15,7 @@ export const ORDER_INCREMENT = 'ORDER_INCREMENT';
 export const ORDER_DECREMENT = 'ORDER_DECREMENT'
 export const USER_LOGOUT = 'USER_LOGOUT'
 export const ORDER_PLACED = 'ORDER_PLACED'
+export const RESTAURANT_LOGOUT = 'RESTAURANT_LOGOUT'
 //CUSTOMER SIGNUP 
 export const userSignedUpSuccess = (text) => (
     {

@@ -1,71 +1,3 @@
-// import Axios from 'axios';
-// import { Component } from 'react';
-// import RestCard from './../common/RestCard';
-// import { useState, useEffect } from "react";
-
-// const Dashboard=()=>{
-//     // state = {
-//     //     restData: []
-//     // }
-//     // constructor() {
-//     //     super();
-//     //    // this.getrestData();
-//     // }
-
-//     // componentDidMount(){
-//     //     this.getrestData();
-//     // }
-
-//         let resData=[];
-//         useEffect(()=>{
-//             () => {
-//                 let data =  Axios.get('http://localhost:3001/dashboard')
-//                     .then(({ data }) => data);
-//                     resData = data;
-
-//             }
-//            // getrestData();
-//         },[]);
-//         return (
-//             <>
-//             <div>{resData.length }</div>
-//                 {
-//                         resData.map(data => {
-//                         return (
-//                             <>
-//                                 <h1>{data.city}</h1>
-//                                 {/* <RestCard /> */}
-//                             </>
-//                         )
-
-//                     })
-//                 }
-//             </>
-//         )
-
-// };
-
-// export default Dashboard;
-
-//!!!!!!!!!!!!!!!!!!!!!!!!!
-/**
- * two APIS will be called
- * one will be to fetch dashboard data based on fiilters
- * second to fetch fav based on loggedin User
- * there will be one big array of object created
- */
-// /**
-//  * dashboard
-//  *
-//  * header (delibery mode search tab), profile
-//  * sidebar (static content)
-//  * maincontent-- tiles(rest db)
-//  *
-//  *
-//  *
-//  *
-//  */
-
 import { useState, useEffect } from 'react'
 import Axios from 'axios'
 import RestCard from '../common/RestCard'
@@ -81,13 +13,23 @@ const Dashboard = () => {
     const [location, setLocation] = useState('')
     const [searchString, setSearchString] = useState('');
     const [searchData, setSearchData] = useState({
-        city: 'San Jose',
-        mode: 'pick',
+        city: localStorage.getItem('city') || 'San Jose',
+        mode: 'delivery',
         category: '',
         searchTabText: '',
     });
+    const [value, setValue] = useState([1, 3]);
     Axios.defaults.withCredentials = true;
 
+    const getRestData =
+        Axios.post('http://localhost:3001/getDataBySearchTabTextForDish', {
+            ...searchData
+        });
+
+    const getFavData =
+        Axios.post('http://localhost:3001/get-favorites', {
+            email: customer,
+        })
     // + adding the use
     useEffect(() => {
         Promise.all([getRestData, getFavData])
@@ -112,39 +54,23 @@ const Dashboard = () => {
 
 
 
-    const getRestData =
-        Axios.post('http://localhost:3001/getDataBySearchTabTextForDish', {
-            ...searchData
-        });
-
-    const getFavData =
-        Axios.post('http://localhost:3001/get-favorites', {
-            email: customer,
-        })
 
     const handleChange = (e) => {
-        console.log(e.target.name);
+        console.log(e.target.value);
         const { name, value } = e.target;
-        // const
         setSearchData(prevSate => ({
             ...prevSate,
             [name]: value,
         }))
         console.log(searchData);
     }
-    const changeDeliveryMode = (event) => {
-        console.log(event.target.value);
-        setSearchData({
-            mode: event.target.value
-        })
-        //  setDeliveryMode(event.target.value)
-    }
+    const handleChangebtn = (val) => setValue(val);
     return (
         <div className="dashboardContent">
             <div className="leftContent">
                 <div className="mode" onChange={(e) => handleChange(e)}>
                     <label>
-                        <input type="radio" value="delivery" name="mode" />
+                        <input type="radio" checked value="delivery" name="mode" />
                         Delivery
                     </label>
                     <label>
@@ -181,9 +107,6 @@ const Dashboard = () => {
                         placeholder="search Restaurant"
                     />
                 </div>
-
-
-
             </div>
             <div className="rightContent">
                 {

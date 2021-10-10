@@ -31,7 +31,7 @@ class Orders extends Component {
                         <div className="order-box" key={index}>
                             <Row>
                                 <Col md={6}>
-                                    <span>{el.restId}</span>
+                                    <span>{el.restName}</span>
                                     <div>
                                         {el.quantity} items for ${el.price} on{' '}
                                         {moment(el.date).format('LLL')}

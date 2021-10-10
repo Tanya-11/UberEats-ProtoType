@@ -75,10 +75,11 @@
         position: relative;
         grid-column: 4;
     }
-    .modal {
+    .modal-wrapper {
         border: solid 1px;
         position: absolute;
         right: 1%;
         top: 14%;
+        background-color: #f0f0f0;
     }
 }

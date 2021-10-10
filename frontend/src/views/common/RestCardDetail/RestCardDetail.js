@@ -3,27 +3,15 @@ import styles from './RestCardDetail.module.scss';
 import Axios from 'axios';
 import RestDishCard from '../RestDishCard/RestDishCard';
 const RestCardDetail = () => {
-    // const [restName, setRestName] = useState('hi');
-    // const [desc, setDesc] = useState('');
-    // const [addressLine, setAddressLine] = useState('');
-    // const [dishId, setDishId] = useState(0);
-    // const [dishName, setDishName] = useState('');
-    // const [ingredients, setIngredients] = useState('');
-    // const [openHrs, setOpenHrs] = useState('');
-    // const [price, setPrice] = useState('');
-    // const [restId, setRestId] = useState('');
     const [dish, setDish] = useState([])
 
     useEffect(() => {
         if (localStorage.getItem('RestCardDetails')) {
-            //   setName(localStorage.getItem('RestCardDetails').restName);
-            console.log("dd", dish);
             getRestDishDetails(JSON.parse(localStorage.getItem('RestCardDetails')).restId);
         }
     }, []);
 
     const getRestDishDetails = async (restId) => {
-        console.log("hdd", restId);
         let api = 'http://localhost:3001/getDataForRestDish'
         let response = []
         try {
@@ -32,43 +20,12 @@ const RestCardDetail = () => {
                 mode: '',
                 searchTabText: restId,
             }).then((res) => {
-
-                // res.data.forEach(element => {
-                //     setDish(element);
-                //     console.log(dish);
-                // setRestName(res.data.restName);
-                // setDesc(res.data.description);
-                // setAddressLine(res.data.addressLine);
-                // setDishId(res.data.dishId)
-                // setDishName(res.data.dishName);
-                // setIngredients(res.data.ingredients);
-                // setOpenHrs(res.data.openHrs);
-                // setPrice(res.data.price);
-                // setRestId(res.data.restId);
-                //  });
                 setDish(res.data);
-                // res.data.map((ele) => {
-                //     console.log('Card-', ele)
-                // })
-
                 return res;
             })
         } catch (err) {
             throw err
         }
-    }
-
-    const clickcall = () => {
-        console.log(dish);
-        if (!localStorage.getItem('OrderCount')) {
-            localStorage.setItem('OrderCount',
-                0
-            )
-        }
-        let count = parseInt(localStorage.getItem('OrderCount'));
-        localStorage.setItem('OrderCount',
-            count + 1
-        )
     }
 
     return (

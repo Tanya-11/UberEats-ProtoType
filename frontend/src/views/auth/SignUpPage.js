@@ -5,11 +5,11 @@ import { useHistory } from 'react-router-dom'
 import {
     userSignedUpSuccess,
     userSignedUpFail,
-    userSignedUpInProgress,
 } from '../../redux/actions/actions'
-import { signup } from '../../redux/reducers/reducers'
 import './auth.scss'
 import Axios from 'axios'
+import { Alert } from 'react-bootstrap'
+
 const SignUpPage = (props) => {
     const dispatch = useDispatch()
     const history = useHistory()
@@ -68,12 +68,15 @@ const SignUpPage = (props) => {
             })
         //    mapDispatchToProps.onSignUp(text);
     }
+    const goToPersons = () => {
+        history.push('/');
+    }
     return (
         <div className="login-container">
             <div className="login-wrapper">
-                <div className="logo" />
+                <div className="logo" onClick={goToPersons} />
                 <h1>Let's get started</h1>
-                {errorMsg && <div className="fail">{errorMsg}</div>}
+                {errorMsg && <Alert variant="danger" className="fail">{errorMsg}</Alert>}
                 <div className="login-form">
                     <input
                         value={nameValue}

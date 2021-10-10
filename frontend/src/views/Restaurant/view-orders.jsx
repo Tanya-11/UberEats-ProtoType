@@ -39,8 +39,8 @@ const ViewOrder = () => {
             ingredients: '',
             price: '',
             description: '',
-            category: '',
-            restRef: '',
+            category: 'Veg',
+            restRef: restaurant,
         }
         setDishData((prev) => [...prev, addCardObj])
         console.log(dishData)

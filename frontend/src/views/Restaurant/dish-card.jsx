@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import Axios from 'axios'
 import './dish-card.scss'
+import { Button } from 'react-bootstrap'
 
 const DishCard = (props) => {
     const restaurant = useSelector((state) => state.restLogin.text.user)
@@ -110,14 +111,16 @@ const DishCard = (props) => {
                         </option>
                     </select>
                 </label>
-                <button
+                <Button
+                    size="sm"
+                    variant="secondary"
                     type="submit"
                     className="submit"
                     disabled={!changed}
                     onClick={submitDishData}
                 >
                     Save Changes
-                </button>
+                </Button>
             </div>
         </div>
     )

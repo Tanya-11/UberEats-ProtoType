@@ -5,22 +5,13 @@ import Axios from 'axios'
 import { useHistory } from 'react-router'
 import { About } from '../CustomerProfile/about'
 import { Favorites } from '../CustomerProfile/favorites'
-const Orders = () => {
+import { Table, Button } from 'react-bootstrap'
+
+const ActiveOrders = () => {
     const restaurant = useSelector((state) => state.restLogin.text.user)
     const [activeOrders, setActiveOrders] = useState([
         {
             orderId: 0,
-            custId: '',
-            orderStatus: 0,
-            orderStatusName: '',
-            dishName: '',
-            dishId: 0,
-            quantity: 0,
-            price: 0,
-        },
-    ])
-    const [completedOrders, setCompletedOrders] = useState([
-        {
             custId: '',
             orderStatus: 0,
             orderStatusName: '',
@@ -57,24 +48,23 @@ const Orders = () => {
                 setActiveOrders(
                     res[0].data.filter((el) => el.orderStatus !== 2 && el.orderStatus !== 5)
                 )
-                setCompletedOrders(
-                    res[0].data.filter((el) => el.orderStatus == 2 || el.orderStatus == 5)
-                )
 
                 if (deliveryMode == 'delivery') {
                     res[1].data.splice(4, 2)
+                    setOrders(res[1].data)
                     //  res[1].data.splice(5, 1);
                 } else if (deliveryMode === 'pick') {
                     res[1].data.splice(2, 2)
+                    setOrders(res[1].data)
                 }
-                setOrders(res[1].data)
+
                 // console.log(completedOrders);
             })
             .catch((err) => {
                 throw err
             })
         console.log(activeOrders)
-        console.log(completedOrders)
+        // console.log(completedOrders)
     }, [])
 
     const showUserInfo = (custId, isClicked) => {
@@ -93,19 +83,6 @@ const Orders = () => {
         }))
         console.log('click' + event.target.name)
     }
-    const handleChangeCompleteOrders = (event, index) => {
-        setBtnDisabled(false)
-        event.preventDefault()
-        let arr = completedOrders.slice()
-        let order = orders.filter((el) => el.orderStatusId === parseInt(event.target.value))
-        arr[index].orderStatus = order[0]?.orderStatusId
-        arr[index].orderStatusName = order[0]?.orderStatusTitle
-        //  newOrderStatus.push(arr[index]);
-        console.log(arr[index])
-        // console.log(newOrderStatus);
-        console.log(arr[index]?.orderStatusName)
-        setCompletedOrders(arr)
-    }
 
     const handleChangeActiveOrders = (event, index) => {
         setBtnDisabled(false)
@@ -120,13 +97,13 @@ const Orders = () => {
 
     const submit = async () => {
         let res = []
-        for (var i = 0; i < completedOrders.length; i++) {
+        for (var i = 0; i < activeOrders.length; i++) {
             // total += (+orders[i].price * orders.text[i]);
-            console.log(completedOrders[i].orderStatusId)
+            console.log(activeOrders[i].orderStatusId)
             res.push(
                 await Axios.post('http://localhost:3001/set-order-status', {
-                    orderId: completedOrders[i].orderId,
-                    orderStatus: completedOrders[i].orderStatus,
+                    orderId: activeOrders[i].orderId,
+                    orderStatus: activeOrders[i].orderStatus,
                     date: new Date(),
                 })
             )
@@ -137,13 +114,13 @@ const Orders = () => {
             } else console.log(`error in placing order for ${i}`)
         }
 
-        console.log(completedOrders)
+        console.log(activeOrders)
     }
 
     return (
         <div>
-            <h1>{completedOrders.length}</h1>
-            <table>
+            {/* <h1>{completedOrders.length}</h1> */}
+            <Table striped bordered hover>
                 <thead>
                     <tr>
                         <td>User</td>
@@ -154,8 +131,8 @@ const Orders = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {completedOrders.length > 0 &&
-                        completedOrders.map((el, index) => (
+                    {activeOrders.length > 0 &&
+                        activeOrders.map((el, index) => (
                             <tr key={index}>
                                 <td onClick={() => showUserInfo(el.custId, !isClicked)}>
                                     <a>{el.custId}</a>
@@ -163,7 +140,7 @@ const Orders = () => {
                                 <td>
                                     <select
                                         value={el.orderStatus}
-                                        onChange={(e) => handleChangeCompleteOrders(e, index)}
+                                        onChange={(e) => handleChangeActiveOrders(e, index)}
                                     >
                                         {orders.map((item, i) => (
                                             <option
@@ -183,10 +160,10 @@ const Orders = () => {
                         ))}
                     <tr></tr>
                 </tbody>
-            </table>
-            <button onClick={submit} disabled={btnDisabled}>
+            </Table>
+            <Button variant="primary" onClick={submit} disabled={btnDisabled}>
                 Save Changes
-            </button>
+            </Button>
 
             {isClicked && (
                 <>
@@ -199,4 +176,4 @@ const Orders = () => {
     )
 }
 
-export default Orders
+export default ActiveOrders

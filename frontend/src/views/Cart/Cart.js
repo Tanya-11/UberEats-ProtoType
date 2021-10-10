@@ -5,7 +5,7 @@ import Axios from 'axios';
 import {
   userOrderPlaced
 } from '../../redux/actions/actions';
-import Orders from '../Restaurant/orders';
+import { Button, Table } from 'react-bootstrap';
 
 const Cart = () => {
   const [orderPlaced, setOrderPlaced] = useState(false);
@@ -92,13 +92,11 @@ const Cart = () => {
 
   return (
     <div className={styles.Cart} data-testid="Cart">
-      {/* orders.length>0 && */}
       {
-
         !orderPlaced && orders.length > 0 && (
           <div>
             <div className={styles.restName}>{restName}</div>
-            <table class={styles.orders}>
+            <Table class={styles.orders}>
 
               <thead>
                 <tr class={styles.ordersRow}>
@@ -122,14 +120,14 @@ const Cart = () => {
                   <td>${total}</td>
                 </tr>
               </tbody>
-            </table>
+            </Table>
             <div className=
               {styles.addr}>
               <span>Address 1:<input type="text" value={addr1}
                 onChange={(e) => { setAddr1(e.target.value) }} /></span>
               <span>Address 2:<input type="text" value={addr2}
                 onChange={(e) => { setAddr2(e.target.value) }} /></span>
-              <button type="submit" onClick={setAddr}>Save Address</button>
+              <Button type="submit" onClick={setAddr}>Save Address</Button>
             </div>
           </div>)
       }
@@ -138,7 +136,7 @@ const Cart = () => {
       }
 
       {
-        !orderPlaced && orders.length > 0 && (<button onClick={placeOrder}>Place Order</button>)
+        !orderPlaced && orders.length > 0 && (<Button onClick={placeOrder}>Place Order</Button>)
       }
     </div >
   )
