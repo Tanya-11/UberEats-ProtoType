@@ -51,7 +51,7 @@ const RestCard = (props) => {
     return (
         <div className="rest-card-container" onClick={goToRestCardDetails}>
             <div className="image-container">
-                {image && <img src={`http://localhost:3000/${image}`} />}
+                {image && <img src={`http://3.143.169.133:3000/${image}`} />}
             </div>
             <div className="rest-name-container">
                 <h3 className="rest-name-container--title"> {props.data.restName}</h3>
