@@ -1,16 +1,16 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import Modal from './Modal'
+import CustomerProfile from './CustomerProfile'
 import { Provider } from 'react-redux'
 import configureStore from 'redux-mock-store'
-
-describe('<Modal />', () => {
+describe('<CustomerProfile />', () => {
   test('it should mount', () => {
-    render(<Modal />)
+    render(<CustomerProfile />)
 
-    const modal = screen.getByTestId('Modal')
-    expect(modal).toBeInTheDocument()
+    const customerProfile = screen.getByTestId('CustomerProfile')
+
+    expect(customerProfile).toBeInTheDocument()
     const initialState = { output: 10 }
     const mockStore = configureStore()
     let store, wrapper

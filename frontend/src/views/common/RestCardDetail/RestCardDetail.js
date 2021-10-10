@@ -1,27 +1,30 @@
 import React, { useEffect, useState } from 'react'
-import styles from './RestCardDetail.module.scss';
-import Axios from 'axios';
-import RestDishCard from '../RestDishCard/RestDishCard';
+import Axios from 'axios'
+import styles from './RestCardDetail.module.scss'
+import RestDishCard from '../RestDishCard/RestDishCard'
+
 const RestCardDetail = () => {
     const [dish, setDish] = useState([])
+    const [image, setImage] = useState([])
 
     useEffect(() => {
         if (localStorage.getItem('RestCardDetails')) {
-            getRestDishDetails(JSON.parse(localStorage.getItem('RestCardDetails')).restId);
+            getRestDishDetails(JSON.parse(localStorage.getItem('RestCardDetails')).restId)
+            setImage(JSON.parse(localStorage.getItem('RestCardDetails')).image)
         }
-    }, []);
+    }, [])
 
     const getRestDishDetails = async (restId) => {
-        let api = 'http://localhost:3001/getDataForRestDish'
+        const api = '/getDataForRestDish'
         let response = []
         try {
             response = await Axios.post(api, {
-                city: 'San Jose',
+                city: localStorage.getItem('city'),
                 mode: '',
                 searchTabText: restId,
             }).then((res) => {
-                setDish(res.data);
-                return res;
+                setDish(res.data)
+                return res
             })
         } catch (err) {
             throw err
@@ -30,27 +33,22 @@ const RestCardDetail = () => {
 
     return (
         <div className={styles.RestCardDetail} data-testid="RestCardDetail">
-            <div className={styles.RestImg} />
+            <div className={styles.RestImg}>
+                {image && <img src={`http://localhost:3000/${image}`} />}
+            </div>
             <div className={styles.RestdescWrapper}>
                 <div className={styles.Restdesc}>
                     <div className="name">
-                        {dish[0]?.restName}(  {dish[0]?.addressLine})
+                        {dish[0]?.restName}( {dish[0]?.addressLine})
                     </div>
-                    <div className="desc">
-                        {dish[0]?.description}
-                    </div>
-                    <div className="open-hrs">
-                        {dish[0]?.openHrs}
-                    </div>
+                    <div className="desc">{dish[0]?.description}</div>
+                    <div className="open-hrs">{dish[0]?.openHrs}</div>
                 </div>
-                <div className={styles.dishcardWrapper}
-                >
+                <div className={styles.dishcardWrapper}>
                     <div className={styles.dishcards}>
-                        {
-                            dish.map((result, i) => (
-                                <RestDishCard key={i} data={result}></RestDishCard>
-                            ))
-                        }
+                        {dish.map((result, i) => (
+                            <RestDishCard key={i} data={result}></RestDishCard>
+                        ))}
                     </div>
                 </div>
             </div>

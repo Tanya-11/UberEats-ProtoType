@@ -3,26 +3,15 @@ import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import Axios from 'axios'
 import { useHistory } from 'react-router'
-import { About } from '../CustomerProfile/about'
-import { Favorites } from '../CustomerProfile/favorites'
+import { About } from '../Customer/profile/About'
+import { Favorites } from '../Customer/profile/Favourites'
 import { Table, Button } from 'react-bootstrap'
 
-const CompleteOrders = () => {
+const ActiveOrders = () => {
     const restaurant = useSelector((state) => state.restLogin.text.user)
-    // const [activeOrders, setActiveOrders] = useState([
-    //     {
-    //         orderId: 0,
-    //         custId: '',
-    //         orderStatus: 0,
-    //         orderStatusName: '',
-    //         dishName: '',
-    //         dishId: 0,
-    //         quantity: 0,
-    //         price: 0,
-    //     },
-    // ])
-    const [completedOrders, setCompletedOrders] = useState([
+    const [activeOrders, setActiveOrders] = useState([
         {
+            orderId: 0,
             custId: '',
             orderStatus: 0,
             orderStatusName: '',
@@ -37,25 +26,27 @@ const CompleteOrders = () => {
     const [userInfo, setUserInfo] = useState('')
     const [isClicked, setIsClicked] = useState(false)
     const [orders, setOrders] = useState([])
-    const getOrders = Axios.post('http://localhost:3001/get-orders', {
+    const getOrders = Axios.post('/get-orders', {
         email: restaurant,
         user: 'restId',
     })
-    const getOrderStatus = Axios.get('http://localhost:3001/get-orderStatus')
+    const getOrderStatus = Axios.get('/get-orderStatus')
     const deliveryMode = localStorage.getItem('deliveryMode')
 
     useEffect(() => {
         Promise.all([getOrders, getOrderStatus])
             .then((res) => {
+                console.log('Promise' + JSON.stringify(res))
                 res[0].data.map((el) => {
                     res[1].data.map((item) => {
                         if (el.orderStatus === item.orderStatusId) {
+                            console.log('favvvvv' + item)
                             el['orderStatusName'] = item.orderStatusTitle
                         }
                     })
                 })
-                setCompletedOrders(
-                    res[0].data.filter((el) => el.orderStatus == 2 || el.orderStatus == 5)
+                setActiveOrders(
+                    res[0].data.filter((el) => el.orderStatus !== 2 && el.orderStatus !== 5)
                 )
 
                 if (deliveryMode == 'delivery') {
@@ -66,10 +57,14 @@ const CompleteOrders = () => {
                     res[1].data.splice(2, 2)
                     setOrders(res[1].data)
                 }
+
+                // console.log(completedOrders);
             })
             .catch((err) => {
                 throw err
             })
+        console.log(activeOrders)
+        // console.log(completedOrders)
     }, [])
 
     const showUserInfo = (custId, isClicked) => {
@@ -78,30 +73,37 @@ const CompleteOrders = () => {
         if (isClicked) setUserInfo(custId)
         console.log(activeOrders)
     }
-    const handleChangeCompleteOrders = (event, index) => {
-        console.log(completedOrders)
+    const setOrderStatus = (event) => {
+        const [name, value] = event.target
+        console.log(value)
+
+        setActiveOrders((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }))
+        console.log('click' + event.target.name)
+    }
+
+    const handleChangeActiveOrders = (event, index) => {
         setBtnDisabled(false)
         event.preventDefault()
-        let arr = completedOrders.slice()
+        let arr = activeOrders.slice()
         let order = orders.filter((el) => el.orderStatusId === parseInt(event.target.value))
         arr[index].orderStatus = order[0]?.orderStatusId
         arr[index].orderStatusName = order[0]?.orderStatusTitle
-        //  newOrderStatus.push(arr[index]);
-        console.log(arr[index])
-        // console.log(newOrderStatus);
         console.log(arr[index]?.orderStatusName)
-        setCompletedOrders(arr)
+        setActiveOrders(arr)
     }
 
     const submit = async () => {
         let res = []
-        for (var i = 0; i < completedOrders.length; i++) {
+        for (var i = 0; i < activeOrders.length; i++) {
             // total += (+orders[i].price * orders.text[i]);
-            console.log(completedOrders[i].orderStatusId)
+            console.log(activeOrders[i].orderStatusId)
             res.push(
-                await Axios.post('http://localhost:3001/set-order-status', {
-                    orderId: completedOrders[i].orderId,
-                    orderStatus: completedOrders[i].orderStatus,
+                await Axios.post('/set-order-status', {
+                    orderId: activeOrders[i].orderId,
+                    orderStatus: activeOrders[i].orderStatus,
                     date: new Date(),
                 })
             )
@@ -112,12 +114,13 @@ const CompleteOrders = () => {
             } else console.log(`error in placing order for ${i}`)
         }
 
-        console.log(completedOrders)
+        console.log(activeOrders)
     }
 
     return (
         <div>
-            <Table>
+            {/* <h1>{completedOrders.length}</h1> */}
+            <Table striped bordered hover>
                 <thead>
                     <tr>
                         <td>User</td>
@@ -128,8 +131,8 @@ const CompleteOrders = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {completedOrders.length > 0 &&
-                        completedOrders.map((el, index) => (
+                    {activeOrders.length > 0 &&
+                        activeOrders.map((el, index) => (
                             <tr key={index}>
                                 <td onClick={() => showUserInfo(el.custId, !isClicked)}>
                                     <a>{el.custId}</a>
@@ -137,7 +140,7 @@ const CompleteOrders = () => {
                                 <td>
                                     <select
                                         value={el.orderStatus}
-                                        onChange={(e) => handleChangeCompleteOrders(e, index)}
+                                        onChange={(e) => handleChangeActiveOrders(e, index)}
                                     >
                                         {orders.map((item, i) => (
                                             <option
@@ -173,4 +176,4 @@ const CompleteOrders = () => {
     )
 }
 
-export default CompleteOrders
+export default ActiveOrders

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import Axios from 'axios'
-import './rest-profile.scss'
+import './Profile.scss'
 import { Button } from 'react-bootstrap'
 
 const About = () => {
@@ -20,16 +20,19 @@ const About = () => {
         openHrs: `${startOpenHrs} - ${endOpenHrs}`,
         deliveryMode: '',
     })
+    const [file, setFile] = useState()
+    const [image, setImage] = useState()
     const [changed, setChanged] = useState(false)
     const [openHrsMsg, setOpenHrsMsg] = useState(
         'The format is "HH:mm", "HH:mm:ss" or "HH:mm:ss.SSS" where HH is 00-23, mm is 00-59, ss is 00-59, and SSS is 000-999'
     )
+    Axios.defaults.withCredentials = true
 
     useEffect(() => {
         getRestData()
     }, [])
     const getRestData = () => {
-        Axios.post('http://localhost:3001/get-rest-data', {
+        Axios.post('/get-rest-data', {
             restId: restaurant,
         })
             .then((res) => {
@@ -43,10 +46,11 @@ const About = () => {
                     city: res.data[0].city,
                     state: res.data[0].state,
                     country: res.data[0].country,
-                    description: res.data[0].description,
+                    description: res.data[0].description || '',
                     openHrs: res.data[0].openHrs,
                     deliveryMode: res.data[0].deliveryMode,
                 })
+                setImage(res.data[0].image)
                 console.log(typeof res.data[0].openHrs.split('-')[0])
                 setStartOpenHrs(res.data[0].openHrs.split(' - ')[0])
                 setEndOpenHrs(res.data[0].openHrs.split(' - ')[1])
@@ -96,17 +100,35 @@ const About = () => {
     }
 
     const submitRestaurantData = () => {
-        Axios.post('http://localhost:3001/set-rest-data', {
+        const formData = new FormData()
+        formData.append('image', file)
+        //  formData.append('restId', restaurant)
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data',
+            },
+        }
+        const setProfile = Axios.post('/set-rest-data', {
             restData,
         })
+        const setPhoto = Axios.post('http://localhost:3001/upload-pic', formData, config)
+        Promise.all([setProfile, setPhoto])
             .then((res) => {
                 console.log(res)
-                localStorage.setItem('deliveryMode', restData.deliveryMode)
-                // console.log(restName);
+                //  localStorage.setItem('deliveryMode', restData.deliveryMode)
+                setImage(res[1].data)
             })
             .catch((err) => {
-                console.log(err)
+                throw err
             })
+        // .then((res) => {
+        //     console.log(res)
+        //     localStorage.setItem('deliveryMode', restData.deliveryMode)
+        //     // console.log(restName);
+        // })
+        // .catch((err) => {
+        //     console.log(err)
+        // })
     }
 
     return (
@@ -198,7 +220,7 @@ const About = () => {
             <div className="mode" onChange={(e) => handleChange(e)}>
                 <label className="label">
                     Mode:
-                    <label>
+                    <label style={{ width: '100px' }}>
                         <input
                             type="radio"
                             value="delivery"
@@ -207,7 +229,7 @@ const About = () => {
                         />
                         Delivery
                     </label>
-                    <label>
+                    <label style={{ width: '100px' }}>
                         <input
                             type="radio"
                             value="pick"
@@ -217,6 +239,18 @@ const About = () => {
                         Pick Up
                     </label>
                 </label>
+                <input
+                    type="file"
+                    name="image"
+                    onChange={(e) => setFile(e.target.files[0])}
+                    accept="image/*"
+                />
+                {image && (
+                    <img
+                        style={{ width: '100px', height: '100px' }}
+                        src={`http://localhost:3000/${image}`}
+                    />
+                )}
             </div>
             {/* <label>Delivery Mode:
                 <input type="radio" name="deliveryMode"

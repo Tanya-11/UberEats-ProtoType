@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import styles from './OrderDetails.scss'
+import styles from './Orders.scss'
 import Axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
-import Orders from './orders'
+import Orders from './Orders'
 
 const OrderDetails = () => {
     const customer = useSelector((state) => state.userLogin.text.user)
@@ -13,7 +13,7 @@ const OrderDetails = () => {
     Axios.defaults.withCredentials = true
     const [index, setIndex] = useState(0)
     useEffect(() => {
-        Axios.post('http://localhost:3001/get-orders-list', {
+        Axios.post('/get-orders-list', {
             email: customer,
         }).then((res) => {
             console.log(res.data)

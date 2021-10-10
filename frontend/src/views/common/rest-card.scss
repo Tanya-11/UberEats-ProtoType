@@ -11,7 +11,11 @@
         object-fit: contain;
         width: -webkit-fill-available;
         height: 128px;
-        content: url('./../../assets/restaurant.png');
+        img {
+            height: inherit;
+            width: inherit;
+        }
+        // content: url('./../../assets/restaurant.png');
     }
     .rest-name-container {
         justify-content: space-between;

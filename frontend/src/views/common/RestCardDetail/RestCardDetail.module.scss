@@ -8,8 +8,12 @@
         width: 100%;
         // background-color: aqua;
         object-fit: fill;
-        content: url(../../../assets/restaurant.png);
+        // content: url(../../../assets/restaurant.png);
         // border: solid black;
+        img {
+            width: inherit;
+            height: inherit;
+        }
     }
     .RestdescWrapper {
         padding-right: 5px;

@@ -1,11 +1,11 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense } from 'react'
 
-const LazyRestDishCard = lazy(() => import('./RestDishCard'));
+const LazyRestDishCard = lazy(() => import('./RestDishCard'))
 
-const RestDishCard = props => (
-  <Suspense fallback={null}>
-    <LazyRestDishCard {...props} />
-  </Suspense>
-);
+const RestDishCard = (props) => (
+    <Suspense fallback={null}>
+        <LazyRestDishCard {...props} />
+    </Suspense>
+)
 
-export default RestDishCard;
+export default RestDishCard

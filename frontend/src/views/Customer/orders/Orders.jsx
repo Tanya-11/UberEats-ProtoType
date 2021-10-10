@@ -1,8 +1,8 @@
 import React, { useState, useEffect, Component } from 'react'
-import './OrderDetails.scss'
+import './Orders.scss'
 import { Col, Container, Row, Badge } from 'react-bootstrap'
 import * as moment from 'moment'
-import ReceiptModal from './receipt-modal'
+import ReceiptModal from './ReceiptModal'
 
 class Orders extends Component {
     constructor(props) {

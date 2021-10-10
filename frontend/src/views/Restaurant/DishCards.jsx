@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import Axios from 'axios'
-import './dish-card.scss'
+import './DishCards.scss'
 import { Button } from 'react-bootstrap'
 
 const DishCard = (props) => {
@@ -26,7 +26,7 @@ const DishCard = (props) => {
         //   getDishData()
     }, [])
     // const getDishData = () => {
-    //     Axios.post('http://localhost:3001/get-dishes', {
+    //     Axios.post('/get-dishes', {
     //         restId: restaurant,
     //     })
     //         .then((res) => {
@@ -55,7 +55,7 @@ const DishCard = (props) => {
 
     const submitDishData = () => {
         console.log(dishData)
-        Axios.post('http://localhost:3001/update-dishData', {
+        Axios.post('/update-dishData', {
             ...dishData,
         })
             .then((res) => {

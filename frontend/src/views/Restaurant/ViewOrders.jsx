@@ -1,9 +1,8 @@
-import React from 'react'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import Axios from 'axios'
-import DishCard from './dish-card'
-import './rest-profile.scss'
+import DishCard from './DishCards'
+import './Profile.scss'
 
 const ViewOrder = () => {
     const restaurant = useSelector((state) => state.restLogin.text.user)
@@ -22,7 +21,7 @@ const ViewOrder = () => {
     }, [])
 
     const getDishData = () => {
-        Axios.post('http://localhost:3001/get-dishes', {
+        Axios.post('/get-dishes', {
             restId: restaurant,
         })
             .then((res) => {
@@ -34,7 +33,7 @@ const ViewOrder = () => {
             })
     }
     const addCard = () => {
-        let addCardObj = {
+        const addCardObj = {
             dishName: '',
             ingredients: '',
             price: '',

@@ -11,18 +11,16 @@ export const USER_LOGGEDIN_INPROGRESS = 'USER_LOGGEDIN__INPROGRESS'
 export const RESTAURANT_LOGGEDIN_SUCCESS = 'RESTAURANT_LOGGEDIN_SUCCESS'
 export const RESTAURANT_LOGGEDIN_FAIL = 'RESTAURANT_LOGGEDIN_FAIL'
 export const RESTAURANT_LOGGEDIN_INPROGRESS = 'RESTAURANT_LOGGEDIN__INPROGRESS'
-export const ORDER_INCREMENT = 'ORDER_INCREMENT';
+export const ORDER_INCREMENT = 'ORDER_INCREMENT'
 export const ORDER_DECREMENT = 'ORDER_DECREMENT'
 export const USER_LOGOUT = 'USER_LOGOUT'
 export const ORDER_PLACED = 'ORDER_PLACED'
 export const RESTAURANT_LOGOUT = 'RESTAURANT_LOGOUT'
-//CUSTOMER SIGNUP 
-export const userSignedUpSuccess = (text) => (
-    {
-        type: USER_SIGNEDUP_SUCCESS,
-        payload: { text },
-    }
-)
+// CUSTOMER SIGNUP
+export const userSignedUpSuccess = (text) => ({
+    type: USER_SIGNEDUP_SUCCESS,
+    payload: { text },
+})
 export const userSignedUpFail = (text) => ({
     type: USER_SIGNEDUP_FAIL,
     payload: { text },
@@ -54,7 +52,6 @@ export const restaurantSignedUpInProgress = (text) => ({
     type: RESTAURANT_SIGNEDUP_INPROGRESS,
     payload: { text },
 })
-
 
 export const restaurantSignedUpSuccess = (text) => ({
     type: RESTAURANT_SIGNEDUP_SUCCESS,

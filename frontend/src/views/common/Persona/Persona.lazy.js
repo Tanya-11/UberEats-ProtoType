@@ -1,11 +1,11 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense } from 'react'
 
-const LazyPersona = lazy(() => import('./Persona'));
+const LazyPersona = lazy(() => import('./Persona'))
 
-const Persona = props => (
-  <Suspense fallback={null}>
-    <LazyPersona {...props} />
-  </Suspense>
-);
+const Persona = (props) => (
+    <Suspense fallback={null}>
+        <LazyPersona {...props} />
+    </Suspense>
+)
 
-export default Persona;
+export default Persona

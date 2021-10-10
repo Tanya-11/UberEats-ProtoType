@@ -1,9 +1,5 @@
 import React, { Component } from 'react'
-import './rest-profile.scss'
-import About from './about'
-import Orders from './completed-orders'
-import ViewOrder from './view-orders'
-import ActiveOrders from './active-orders'
+import './Profile.scss'
 import { Navbar, NavDropdown, Nav, Container } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { USER_LOGOUT } from '../../redux/actions/actions'
@@ -24,13 +20,13 @@ class RestProfile extends Component {
         return (
             <Navbar bg="dark" variant="dark" expand="lg">
                 <Container>
-                    <Navbar.Brand href="#home">Restaurant Dashboard</Navbar.Brand>
+                    <Navbar.Brand>Restaurant Dashboard</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
                             <Nav.Link href="/rest-dashboard/about">About</Nav.Link>
                             <Nav.Link href="/rest-dashboard/dishes">View/Edit/Add Dishes</Nav.Link>
-                            <NavDropdown title="Oders" id="basic-nav-dropdown">
+                            <NavDropdown title="Orders" id="basic-nav-dropdown">
                                 <NavDropdown.Item href="/rest-dashboard/active">
                                     Active
                                 </NavDropdown.Item>

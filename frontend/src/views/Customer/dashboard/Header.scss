@@ -7,7 +7,7 @@
 
     .uber-logo {
         grid-column: 2;
-        content: url('../../assets/Uber_Eats.svg');
+        content: url('../../../assets/Uber_Eats.svg');
         object-fit: scale-down;
     }
     .toggle-switch {
@@ -70,7 +70,7 @@
     }
 
     .user-logo {
-        content: url('../../assets/profile.png');
+        content: url('../../../assets/profile.png');
         width: 30px;
         position: relative;
         grid-column: 4;

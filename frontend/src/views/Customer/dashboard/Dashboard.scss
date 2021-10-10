@@ -1,6 +1,6 @@
 .dashboardContent {
     display: grid;
-    grid-template-columns: 25% 75%;
+    grid-template-columns: max-content 75%;
     height: 100%;
     .leftContent {
         grid-column: 1;

@@ -2,11 +2,8 @@ import { useEffect, useState } from 'react'
 import { Redirect } from 'react-router'
 import { connect, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import {
-    userSignedUpSuccess,
-    userSignedUpFail,
-} from '../../redux/actions/actions'
-import './auth.scss'
+import { userSignedUpSuccess, userSignedUpFail } from '../../redux/actions/actions'
+import './Auth.scss'
 import Axios from 'axios'
 import { Alert } from 'react-bootstrap'
 
@@ -20,45 +17,44 @@ const SignUpPage = (props) => {
     //     return (<Redirect to="/login"></Redirect>);
     // }
     const [errorMsg, setErrorMsg] = useState('')
-    const [emailValue, setEmailValue] = useState('');
-    const [nameValue, setNameValue] = useState('');
-    const [cityValue, setcityValue] = useState('');
-    const [passwordValue, setPasswordValue] = useState('');
-    const [emailPlaceholder, setEmailPlaceholder] = useState('TType Email');
-    const [passwordPlaceholder, setPasswordPlaceholder] = useState('Type Password');
-    const [namePlaceholder, setNamePlaceholder] = useState('Type Name');
-    const [cityPlaceholder, setCityPlaceholder] = useState('Type City');
+    const [emailValue, setEmailValue] = useState('')
+    const [nameValue, setNameValue] = useState('')
+    const [cityValue, setcityValue] = useState('')
+    const [passwordValue, setPasswordValue] = useState('')
+    const [emailPlaceholder, setEmailPlaceholder] = useState('TType Email')
+    const [passwordPlaceholder, setPasswordPlaceholder] = useState('Type Password')
+    const [namePlaceholder, setNamePlaceholder] = useState('Type Name')
+    const [cityPlaceholder, setCityPlaceholder] = useState('Type City')
     const [signUpURL, setSignUpURL] = useState('')
-    Axios.defaults.withCredentials = true;
+    Axios.defaults.withCredentials = true
 
     useEffect(() => {
-        console.log(props.data);
+        console.log(props.data)
         if (props.data === 'restaurant') {
-            setEmailPlaceholder('Restaurant Email');
-            setNamePlaceholder('Restaurant Name');
-            setPasswordPlaceholder('Restaurant Password');
-            setCityPlaceholder('Restaurant Location');
-            setSignUpURL('/restaurant-login');
-        }
-        else {
-            setEmailPlaceholder('User Email');
-            setNamePlaceholder('User Name');
-            setPasswordPlaceholder('User Password');
-            setSignUpURL('/user-login');
+            setEmailPlaceholder('Restaurant Email')
+            setNamePlaceholder('Restaurant Name')
+            setPasswordPlaceholder('Restaurant Password')
+            setCityPlaceholder('Restaurant Location')
+            setSignUpURL('/restaurant-login')
+        } else {
+            setEmailPlaceholder('User Email')
+            setNamePlaceholder('User Name')
+            setPasswordPlaceholder('User Password')
+            setSignUpURL('/user-login')
         }
     }, [])
     const onSignUpClicked = () => {
-        Axios.post('http://localhost:3001/signup', {
+        Axios.post('/signup', {
             name: nameValue,
             email: emailValue,
             password: passwordValue,
             city: cityValue,
-            persona: props.data
+            persona: props.data,
         })
             .then((res) => {
                 console.log(emailValue)
-                dispatch(userSignedUpSuccess(['Sign Up Success', emailValue]));
-                console.log(signUpURL);
+                dispatch(userSignedUpSuccess(['Sign Up Success', emailValue]))
+                console.log(signUpURL)
                 history.push(signUpURL)
             })
             .catch((err) => {
@@ -69,14 +65,18 @@ const SignUpPage = (props) => {
         //    mapDispatchToProps.onSignUp(text);
     }
     const goToPersons = () => {
-        history.push('/');
+        history.push('/')
     }
     return (
         <div className="login-container">
             <div className="login-wrapper">
                 <div className="logo" onClick={goToPersons} />
                 <h1>Let's get started</h1>
-                {errorMsg && <Alert variant="danger" className="fail">{errorMsg}</Alert>}
+                {errorMsg && (
+                    <Alert variant="danger" className="fail">
+                        {errorMsg}
+                    </Alert>
+                )}
                 <div className="login-form">
                     <input
                         value={nameValue}
@@ -96,14 +96,14 @@ const SignUpPage = (props) => {
                         type="password"
                         placeholder={passwordPlaceholder}
                     />
-                    {
-                        props.data === 'restaurant' && <input
+                    {props.data === 'restaurant' && (
+                        <input
                             value={cityValue}
                             onChange={(e) => setcityValue(e.target.value)}
                             type="text"
                             placeholder={cityPlaceholder}
                         />
-                    }
+                    )}
                     <button
                         // disabled={!emailValue || !passwordValue || !confirmPasswordValue }
                         onClick={onSignUpClicked}

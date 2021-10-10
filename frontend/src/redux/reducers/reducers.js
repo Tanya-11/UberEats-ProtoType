@@ -6,22 +6,22 @@ const signUpStatus = {
 }
 
 export const userSignupReducer = (state = {}, action) => {
-    console.log('reducers' + JSON.stringify(action))
+    console.log(`reducers${JSON.stringify(action)}`)
     const { type, payload } = action
     switch (type) {
         case ACTIONS.USER_SIGNEDUP_SUCCESS: {
             const { text } = payload
             const status = {
-                text: text,
+                text,
                 isSignedUp: true,
             }
-            return status;
+            return status
         }
         case ACTIONS.USER_SIGNEDUP_INPROGRESS:
         case ACTIONS.USER_SIGNEDUP_FAIL: {
             const { text } = payload
             const status = {
-                text: text,
+                text,
                 isSignedUp: false,
             }
             return status
@@ -32,14 +32,14 @@ export const userSignupReducer = (state = {}, action) => {
 }
 
 export const restSignupReducer = (state = {}, action) => {
-    console.log('reducers' + JSON.stringify(action))
+    console.log(`reducers${JSON.stringify(action)}`)
     const { type, payload } = action
     switch (type) {
         case ACTIONS.USER_SIGNEDUP_SUCCESS: {
             const { text, user } = payload
             const status = {
                 text: payload.text,
-                user: user,
+                user,
                 isSignedUp: true,
             }
             return status
@@ -48,8 +48,8 @@ export const restSignupReducer = (state = {}, action) => {
         case ACTIONS.USER_SIGNEDUP_FAIL: {
             const { text, user } = payload
             const status = {
-                text: text,
-                user: user,
+                text,
+                user,
                 isSignedUp: false,
             }
             return status
@@ -71,8 +71,8 @@ export const userLoginReducer = (state = {}, action) => {
         case ACTIONS.USER_LOGGEDIN_SUCCESS: {
             const { text, user } = payload
             const status = {
-                text: text,
-                user: user,
+                text,
+                user,
                 isLoggedIn: true,
             }
             return status
@@ -81,8 +81,8 @@ export const userLoginReducer = (state = {}, action) => {
         case ACTIONS.USER_LOGGEDIN_FAIL: {
             const { text, user } = payload
             const status = {
-                text: text,
-                user: user,
+                text,
+                user,
                 isLoggedIn: false,
             }
             return status
@@ -98,8 +98,8 @@ export const restLoginReducer = (state = {}, action) => {
         case ACTIONS.RESTAURANT_LOGGEDIN_SUCCESS: {
             const { text, user } = payload
             const status = {
-                text: text,
-                user: user,
+                text,
+                user,
                 isLoggedIn: true,
             }
 
@@ -109,8 +109,8 @@ export const restLoginReducer = (state = {}, action) => {
         case ACTIONS.RESTAURANT_LOGGEDIN_FAIL: {
             const { text, user } = payload
             const status = {
-                text: text,
-                user: user,
+                text,
+                user,
                 isLoggedIn: false,
             }
             return status
@@ -120,7 +120,7 @@ export const restLoginReducer = (state = {}, action) => {
     }
 }
 
-let text = {
+const text = {
     text: 0,
     dishId: '',
     restId: '',
@@ -132,36 +132,36 @@ export const orderCountReducer = (state = [], action) => {
     switch (type) {
         case ACTIONS.ORDER_INCREMENT: {
             const { text, dishId, dishName, restId, restName, price } = payload.text
-            let orders = state;
-            state = [];
-            let found = false;
-            orders.map(el => {
-                console.log(el);
+            const orders = state
+            state = []
+            let found = false
+            orders.map((el) => {
+                console.log(el)
                 if (el.dishId === dishId && el.restId === restId) {
-                    console.log(text);
-                    el.text = el.text + text;
-                    found = true;
+                    console.log(text)
+                    el.text += text
+                    found = true
                 }
             })
             if (found === false) {
                 const status = {
-                    text: text,
-                    dishId: dishId,
-                    dishName: dishName,
-                    restId: restId,
-                    restName: restName,
-                    price: price
+                    text,
+                    dishId,
+                    dishName,
+                    restId,
+                    restName,
+                    price,
                 }
                 orders.push(status)
             }
-            console.log(orders);
-            return state.concat(orders);
+            console.log(orders)
+            return state.concat(orders)
         }
         case ACTIONS.ORDER_PLACED: {
-            console.log('act' + action);
-            console.log('st' + state);
-            state = [];
-            return state;
+            console.log(`act${action}`)
+            console.log(`st${state}`)
+            state = []
+            return state
         }
         default:
             return state
@@ -200,7 +200,6 @@ export const orderCountReducer = (state = [], action) => {
 //             return state;
 //     }
 // }
-
 
 // export const OrderCountReducer = (state = [], action) => {
 //     const { type, payload } = action;

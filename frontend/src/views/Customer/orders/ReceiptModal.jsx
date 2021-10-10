@@ -28,7 +28,7 @@ class ReceiptModal extends React.Component {
 
     getReceipt() {
         console.log('fetching receipt')
-        Axios.post('http://localhost:3001/get-view-receipt', {
+        Axios.post('/get-view-receipt', {
             date: moment(this.props.data.date).format('YYYY-MM-DD HH:mm:ss'),
         }).then((res) => {
             console.log(res.data)
