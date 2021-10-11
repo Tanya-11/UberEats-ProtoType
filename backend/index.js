@@ -303,11 +303,11 @@ app.post('/get-orders', (req, res) => {
   let sql = ''
   if (req.body.user === 'restId')
     sql = `SELECT
-    count(orderId) as quantity, dishName, custId, sum(price) as price, date, orderStatus
+    count(orderId) as quantity, orderId,  dishName, custId, sum(price) as price, date, orderStatus
     FROM orders WHERE restId = ? group by date`;
   if (req.body.user === 'custId')
     sql = `SELECT 
-    count(orderId) as quantity, dishName, custId, sum(price) as price, date, orderStatus
+    count(orderId) as quantity, orderId, dishName, custId, sum(price) as price, date, orderStatus
      FROM orders WHERE custId = ?  group by date`;
   db.query(sql, [req.body.email], (err, result) => {
     if (err) {
