@@ -61,5 +61,5 @@
         "eslint-plugin-react": "^7.26.1",
         "prettier": "^2.4.1"
     },
-    "proxy": "http://3.143.169.133:3001"
+    "proxy": "http://3.19.240.173:3001"
 }
