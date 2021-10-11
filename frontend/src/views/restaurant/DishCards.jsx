@@ -103,10 +103,10 @@ const DishCard = (props) => {
                         value={dishData.category}
                         onChange={(e) => handleChange(e)}
                     >
-                        <option name="category" value="Veg">
+                        <option name="category" value="Vegetarian">
                             Veg
                         </option>
-                        <option name="category" value="Non-Veg">
+                        <option name="category" value="Halal">
                             Non-Veg
                         </option>
                     </select>

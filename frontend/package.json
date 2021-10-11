@@ -12,9 +12,11 @@
         "@testing-library/react": "^11.2.7",
         "@testing-library/user-event": "^12.8.3",
         "axios": "^0.21.4",
+        "bootstrap": "^4.6.0",
         "moment": "^2.29.1",
         "node-sass": "^6.0.1",
         "react": "^17.0.2",
+        "react-bootstrap": "^1.6.4",
         "react-dom": "^17.0.2",
         "react-moment": "^1.1.1",
         "react-redux": "^7.2.5",
@@ -61,5 +63,5 @@
         "eslint-plugin-react": "^7.26.1",
         "prettier": "^2.4.1"
     },
-    "proxy": "http://3.19.240.173:3001"
+    "proxy": "http://localhost"
 }

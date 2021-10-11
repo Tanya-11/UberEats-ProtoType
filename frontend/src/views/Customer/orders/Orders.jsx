@@ -34,7 +34,7 @@ class Orders extends Component {
                                     <span>{el.restName}</span>
                                     <div>
                                         {el.quantity} items for ${el.price} on{' '}
-                                        {moment(el.date).format('LLL')}
+                                        {new Date(el.date).toGMTString()}
                                         <input
                                             type="submit"
                                             value="View Receipt"

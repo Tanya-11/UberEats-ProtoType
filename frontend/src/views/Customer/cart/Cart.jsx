@@ -5,7 +5,7 @@ import Axios from 'axios'
 import { useHistory } from 'react-router'
 import { userOrderPlaced } from '../../../redux/actions/actions'
 import { Button, Table } from 'react-bootstrap'
-
+import * as moment from 'moment'
 const Cart = () => {
     const [orderPlaced, setOrderPlaced] = useState(false)
     const orders = useSelector((state) => state.cart)
@@ -22,6 +22,7 @@ const Cart = () => {
     useEffect(() => {
         setMode(JSON.parse(localStorage.getItem('RestCardDetails')).deliveryMode)
         console.log('calcul', orders)
+        console.log(customer)
         let total = 0
         if (orders.length > 0) setRestName(orders[0].restName)
         for (var i = 0; i < orders.length; i++) {
@@ -74,7 +75,7 @@ const Cart = () => {
                     restId: orders[i].restId,
                     quantity: orders[i].text,
                     price: parseInt(orders[i].text) * parseInt(orders[i].price),
-                    date: new Date(),
+                    date: moment(new Date()).format('YYYY-MM-DD HH:mm'),
                     address: addr1,
                 })
             )

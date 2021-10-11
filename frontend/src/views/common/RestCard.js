@@ -4,12 +4,14 @@ import FavoriteBorderTwoToneIcon from '@mui/icons-material/FavoriteBorderTwoTone
 import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone'
 import Axios from 'axios'
 import { useHistory } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const RestCard = (props) => {
     const [isFav, setisFav] = useState(false)
     const history = useHistory()
     const [image, setImage] = useState([])
 
+    const customer = useSelector((state) => state.userLogin.text.user)
 
 
     useEffect(() => {
@@ -31,7 +33,7 @@ const RestCard = (props) => {
         let response = []
         try {
             response = await Axios.post(api, {
-                user: 'liam@gmail.com',
+                user: customer,
                 restaurant: props.data.restId,
             }).then((data) => {
                 console.log('Api res-', data)
@@ -51,7 +53,7 @@ const RestCard = (props) => {
     return (
         <div className="rest-card-container" onClick={goToRestCardDetails}>
             <div className="image-container">
-                {image && <img src={`http://3.19.240.173:3000/${image}`} />}
+                {image && <img src={`http://localhost:3001/${image}`} />}
             </div>
             <div className="rest-name-container">
                 <h3 className="rest-name-container--title"> {props.data.restName}</h3>

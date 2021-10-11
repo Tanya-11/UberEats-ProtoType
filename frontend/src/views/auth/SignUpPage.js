@@ -3,7 +3,7 @@ import { Redirect } from 'react-router'
 import { connect, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { userSignedUpSuccess, userSignedUpFail } from '../../redux/actions/actions'
-import './Auth.scss'
+import './AuthN.scss'
 import Axios from 'axios'
 import { Alert } from 'react-bootstrap'
 

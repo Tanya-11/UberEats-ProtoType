@@ -6,6 +6,7 @@ import { useHistory } from 'react-router'
 import { About } from '../Customer/profile/About'
 import { Favorites } from '../Customer/profile/Favourites'
 import { Table, Button } from 'react-bootstrap'
+import * as moment from 'moment'
 
 const CompleteOrders = () => {
     const restaurant = useSelector((state) => state.restLogin.text.user)
@@ -101,7 +102,7 @@ const CompleteOrders = () => {
                 await Axios.post('/set-order-status', {
                     orderId: completedOrders[i].orderId,
                     orderStatus: completedOrders[i].orderStatus,
-                    date: new Date(),
+                    date: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
                 })
             )
         }

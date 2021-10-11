@@ -10,7 +10,7 @@ import {
     restLogInProgress,
 } from '../../redux/actions/actions'
 import Axios from 'axios'
-import './Auth.scss'
+import './AuthN.scss'
 import { Alert } from 'react-bootstrap'
 
 export const LoginPage = (props) => {

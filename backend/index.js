@@ -41,7 +41,7 @@ app.use('/images', express.static('images'));
 app.use(
   cors(
     {
-      origin: 'http://3.19.240.173:3000',
+      origin: 'http://localhost:3000',
       methods: ["GET", "POST"],
       credentials: true,
     }
@@ -218,24 +218,24 @@ app.post('/getDataForRest', (req, res) => {
 
 })
 
-app.post('/dashboard', (req, res) => {
-  console.log(req.body);
-  let sql = `SELECT * FROM restaurant
-    WHERE city LIKE "%${req.body.city}%" 
-    AND deliveryMode LIKE "%${req.body.mode}%" LIMIT 2`;
-  db.query(sql, (err, resp) => {
-    if (err) {
-      res.status(400).json(err);
-      console.log(err);
-    }
-    else {
-      res.status(200).json(resp);
-      // result.push(resp);
-      //.json(result);
-      //console.log("res2",result);
-    }
-  })
-});
+// app.post('/dashboard', (req, res) => {
+//   console.log(req.body);
+//   let sql = `SELECT * FROM restaurant
+//     WHERE city LIKE "%${req.body.city}%" 
+//     AND deliveryMode LIKE "%${req.body.mode}%" LIMIT 2`;
+//   db.query(sql, (err, resp) => {
+//     if (err) {
+//       res.status(400).json(err);
+//       console.log(err);
+//     }
+//     else {
+//       res.status(200).json(resp);
+//       // result.push(resp);
+//       //.json(result);
+//       //console.log("res2",result);
+//     }
+//   })
+// });
 
 app.post('/favorites-add', (req, res) => {
   console.log("fav", req.body);
@@ -302,9 +302,13 @@ app.post('/place-orders', (req, res) => {
 app.post('/get-orders', (req, res) => {
   let sql = ''
   if (req.body.user === 'restId')
-    sql = `SELECT * FROM orders WHERE restId = ?`;
+    sql = `SELECT
+    count(orderId) as quantity, dishName, custId, sum(price) as price, date, orderStatus
+    FROM orders WHERE restId = ? group by date`;
   if (req.body.user === 'custId')
-    sql = `SELECT * FROM orders WHERE custId = ?`;
+    sql = `SELECT 
+    count(orderId) as quantity, dishName, custId, sum(price) as price, date, orderStatus
+     FROM orders WHERE custId = ?  group by date`;
   db.query(sql, [req.body.email], (err, result) => {
     if (err) {
       res.status(400).json(err);
@@ -559,14 +563,14 @@ app.post('/upload-pic', upload.single('image'), (req, res) => {
     sql = "UPDATE restaurant SET image=? where restId=?"
     param = req.body.restId
   }
-  console.log(req.file.path);
+  console.log('file' + req.file.path);
   console.log(param);
   console.log(sql);
-  param = "food@gmail.com"
+  //param = "food@gmail.com"
   db.query(sql, [req.file.path, param], (err, result) => {
     if (err) {
       res.status(400).json(err);
-      console.log(`Error in fetching data:${err}`);
+      console.log(`Error in setting data:${err}`);
     }
     else {
       res.status(200).json(req.file.path);
@@ -575,19 +579,6 @@ app.post('/upload-pic', upload.single('image'), (req, res) => {
   })
 });
 
-app.get('/fetch-file', (req, res) => {
-  let sql = `select image from customer where email=?`;
-  db.query(sql, ['liam@gmail.com'], (err, result) => {
-    if (err) {
-      res.status(400).json(err);
-      console.log(`Error in fetching data:${err}`);
-    }
-    else {
-      res.status(200).json(result);
-      console.log(result);
-    }
-  })
-});
 
 
 

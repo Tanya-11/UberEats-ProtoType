@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import SignUpPage from './views/auth/SignUpPage'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.scss'
 import Dashboard from './views/Customer/dashboard/Dashboard'
 import Persona from './views/common/Persona/Persona'

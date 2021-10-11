@@ -6,6 +6,7 @@ import { useHistory } from 'react-router'
 import { About } from '../Customer/profile/About'
 import { Favorites } from '../Customer/profile/Favourites'
 import { Table, Button } from 'react-bootstrap'
+import * as moment from 'moment'
 
 const ActiveOrders = () => {
     const restaurant = useSelector((state) => state.restLogin.text.user)
@@ -56,7 +57,7 @@ const ActiveOrders = () => {
                 } else if (deliveryMode === 'pick') {
                     res[1].data.splice(2, 2)
                     setOrders(res[1].data)
-                }
+                } else setOrders(res[1].data)
 
                 // console.log(completedOrders);
             })
@@ -104,7 +105,7 @@ const ActiveOrders = () => {
                 await Axios.post('/set-order-status', {
                     orderId: activeOrders[i].orderId,
                     orderStatus: activeOrders[i].orderStatus,
-                    date: new Date(),
+                    date: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
                 })
             )
         }

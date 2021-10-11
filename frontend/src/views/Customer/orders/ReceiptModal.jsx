@@ -16,20 +16,21 @@ class ReceiptModal extends React.Component {
 
     handleModalShowHide() {
         this.setState({ showHide: !this.state.showHide })
-        console.log(this.props.showHide)
+        console.log(this.props)
         console.log(this.state.showHide)
         this.props.modal(false)
     }
     componentDidMount() {
         console.log(this.props.showHide)
-        console.log(this.props.data.date)
+        console.log(new Date(this.props.data.date).toGMTString())
+
         this.getReceipt()
     }
 
     getReceipt() {
         console.log('fetching receipt')
         Axios.post('/get-view-receipt', {
-            date: moment(this.props.data.date).format('YYYY-MM-DD HH:mm:ss'),
+            date: moment(new Date(this.props.data.date).toGMTString()).format(),
         }).then((res) => {
             console.log(res.data)
             this.setState({
@@ -50,7 +51,7 @@ class ReceiptModal extends React.Component {
                         </Button>
                     </Modal.Header>
                     <Modal.Body>
-                        <table class="table">
+                        <table className="table">
                             <thead>
                                 <tr>
                                     <td>Quantity</td>
@@ -59,8 +60,8 @@ class ReceiptModal extends React.Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {this.state.orders.map((el) => (
-                                    <tr>
+                                {this.state.orders.map((el, index) => (
+                                    <tr key={index}>
                                         <td>{el.quantity}</td>
                                         <td>{el.dishName}</td>
                                         <td>{el.price}</td>

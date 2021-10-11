@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import 'bootstrap/dist/css/bootstrap.min.css'
 import { persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/lib/integration/react'
 import './index.css'
@@ -8,7 +7,6 @@ import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import App from './App'
 import { configureStore } from './redux/store'
-// import configureStore from './redux/store'
 
 const store = configureStore()
 const persistor = persistStore(store)
