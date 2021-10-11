@@ -127,7 +127,7 @@ app.post('/signup', async (req, res) => {
           response = [req.body.name, req.body.email, encryptedPassword]
         }
         else {
-          api = 'INSERT INTO restaurant(restName,restId,password) VALUES (?,?,?)';
+          api = 'INSERT INTO restaurant(restName,restId,password, city) VALUES (?,?,?,?)';
           response = [req.body.name, req.body.email, encryptedPassword, req.body.city]
         }
 
