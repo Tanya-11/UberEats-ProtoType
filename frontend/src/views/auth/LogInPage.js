@@ -98,7 +98,7 @@ export const LoginPage = (props) => {
     }
 
     const onNextClicked = () => {
-        Axios.post('/signin', {
+        Axios.post('http://3.19.240.173:3001/signin', {
             email: emailValue,
             password: passwordValue,
             persona: props.data,
