@@ -73,7 +73,7 @@ export const About = (props) => {
             ...userData,
             custId: customer,
         })
-        const setPhoto = Axios.post('http://3.19.240.173:3001/upload-pic', formData, config)
+        const setPhoto = Axios.post('http://localhost:3001/upload-pic', formData, config)
         Promise.all([setProfile, setPhoto])
 
             .then((res) => {
@@ -112,7 +112,7 @@ export const About = (props) => {
         //  const result = await Axios.post('http://localhost:3001/upload-pic', formData, config)
         //  setImage(result.data.imagePath)
         //  setImage('image/3fe4ee4f70dfcfc6cf0fc7acb09ea0f5')
-        const result = await Axios.get('http://3.19.240.173:3001/fetch-file')
+        const result = await Axios.get('http://localhost:3001/fetch-file')
         console.log(result.data[0])
         setImage(result.data[1].image)
         // console.log(res);
@@ -131,7 +131,7 @@ export const About = (props) => {
                         margin: '12%',
                         float: 'right',
                     }}
-                    src={`http://3.19.240.173:3001/${image}`}
+                    src={`http://localhost:3001/${image}`}
                 />
             )}
             <label>

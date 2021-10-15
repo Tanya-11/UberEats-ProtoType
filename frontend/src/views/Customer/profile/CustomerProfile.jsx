@@ -8,8 +8,8 @@ import { Favorites } from './Favourites'
 import { About } from './About'
 const CustomerProfile = () => {
     const [file, setFile] = useState('')
-    const history = useHistory()
-    const customer = useSelector((state) => state.userLogin.text.user)
+    // const history = useHistory()
+    // const customer = useSelector((state) => state.userLogin.text.user)
     // Axios.defaults.withCredentials = true;
     // const [userData, setUserData] = useState({
     //   name: '',

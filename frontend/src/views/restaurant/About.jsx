@@ -112,7 +112,7 @@ const About = () => {
         const setProfile = Axios.post('/set-rest-data', {
             restData,
         })
-        const setPhoto = Axios.post('http://3.19.240.173:3001/upload-pic', formData, config)
+        const setPhoto = Axios.post('http://localhost:3001/upload-pic', formData, config)
         Promise.all([setProfile, setPhoto])
             .then((res) => {
                 console.log(res)
@@ -263,7 +263,7 @@ const About = () => {
                 {image && (
                     <img
                         style={{ width: '100px', height: '100px' }}
-                        src={`http://3.19.240.173:3001/${image}`}
+                        src={`http://localhost:3001/${image}`}
                     />
                 )}
             </div>
