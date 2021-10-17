@@ -8,7 +8,6 @@ const multer = require('multer')
 const fs = require('fs')
 const PORT = 3001;
 //process.env.PORT || 3001;
-// const bodyParser = require('body-parser');
 const router = express.Router();
 const app = express();
 
@@ -41,7 +40,7 @@ app.use('/images', express.static('images'));
 app.use(
   cors(
     {
-      origin: 'http://3.19.240.173:3000',
+      origin: 'http://localhost:3000',
       methods: ["GET", "POST"],
       credentials: true,
     }
@@ -83,7 +82,7 @@ app.post('/signin', (req, res) => {
   db.query(api, [req.body.email],
     async (err, result) => {
       try {
-        console.log(result);
+        console.log("res"+ result);
         if (result && result?.length > 0) {
           console.log("result-", typeof (result[0].password));
           const validPassword = await bcrypt.compare(req.body.password, result[0].password);
@@ -261,10 +260,11 @@ app.post('/favorites-delete', (req, res) => {
   db.query(sql, [user, restaurant], (err, result) => {
     //  console.log(res);
     if (err) {
-      res.status(400).json(err);
       console.log(`Invalid User or Restaurant Name${err}`);
+      res.status(400).json(err);
     }
     else {
+      console.log(result);
       res.status(200).json(result);
       console.log(result);
     }
@@ -272,6 +272,8 @@ app.post('/favorites-delete', (req, res) => {
 });
 
 app.post('/get-favorites', (req, res) => {
+  console.log(req.body.email);
+  console.log(typeof(req.body.email));
   let sql = `SELECT * FROM fav_restaurant WHERE custId = ?`;
   db.query(sql, [req.body.email], (err, result) => {
     if (err) {
@@ -279,7 +281,8 @@ app.post('/get-favorites', (req, res) => {
       console.log(`Invalid User Name:${err}`);
     }
     else {
-      res.status(200).json(result);
+      console.log(result);
+      res.status(200).json(result);   
       console.log(result);
     }
   })
@@ -368,19 +371,16 @@ app.post('/get-profile', (req, res) => {
 });
 app.post('/set-profile', (req, res) => {
   console.log(req.body);
-  // const [name, val] = [{ ...req.body }, custId];
-
   let sql = `UPDATE customer SET name = ?, email= ?, phone = ?, city = ?, state = ?, country = ?, nickName = ? WHERE (email = ?)`;
   db.query(sql, [req.body.name, req.body.email, req.body.phone, req.body.city, req.body.state, req.body.country, req.body.nickName, req.body.custId],
     (err, result) => {
-      if (err) {
-        res.status(400).json(err);
+      if (err || result.affectedRows===0) {
+        res.status(400).send('No Update');
 
         console.log(`Error in fetching data:${err}`);
       }
       else {
         res.status(200).json(result);
-        // console.log(result);
       }
     })
 });
@@ -508,7 +508,7 @@ app.post('/update-dishData', (req, res) => {
   db.query(sql, [req.body.dishName, req.body.ingredients, req.body.price, req.body.description, req.body.category, req.body.restRef], (err, result) => {
     if (err) {
       console.log(err);
-      res.status(400).json(err);
+      res.status(400).send('Bad Request');
     }
     else {
       console.log(result);
@@ -538,10 +538,10 @@ app.post('/get-orders-list', (req, res) => {
 
 app.post('/get-view-receipt', (req, res) => {
   console.log(req.body.date);
-  let sql = `SELECT sum(price) as total, price, dishName,quantity FROM orders WHERE date=?`;
+  let sql = `SELECT sum(price) as total, price, dishName,quantity, date FROM orders WHERE date=?`;
   db.query(sql, [req.body.date], (err, result) => {
     if (err) {
-      res.status(400).json(err);
+      res.status(400).send('Bad Request');
       console.log(`Error in fetching data:${err}`);
     }
     else {
@@ -587,3 +587,5 @@ app.post('/upload-pic', upload.single('image'), (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
+
+module.exports = app;
